@@ -8,16 +8,63 @@ ANPC::ANPC()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT(""))
-
+	//메시로드
+	ConstructorHelpers::FObjectFinder<USkeletalMesh>
+		MeshAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'"));
+	if (MeshAsset.Succeeded())
+	{
+		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -89.0f));
+		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+	}
 
 }
+
+
 
 // Called when the game starts or when spawned
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//동적 머터리얼생성
+	UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
+	FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
+	GetMesh()->SetMaterial(0, FaceMaterialInstance);
+
+}
+
+void ANPC::ApplayVisual(const FNPCVisualData& VisualData)
+{
+	//headSocket 머리소켓 이름
+	//머리에 헤어 붙이기
+	if (VisualData.HairMesh)
+	{
+		//이미 헤어가 있다면 없애기
+		if (HairComponent)
+		{
+			HairComponent->DestroyComponent();
+		}
+
+		HairComponent = NewObject<UStaticMeshComponent>(this, TEXT("HairComponent"));
+		HairComponent->SetStaticMesh(VisualData.HairMesh);
+		HairComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("headSocket"));
+		HairComponent->RegisterComponent();
+	}
+
+	//머터리얼 UV파라미터 적용
+	//벡터파라미터의 이름을 맞추면 바뀜
+	if (FaceMaterialInstance)
+	{
+		FaceMaterialInstance->SetVectorParameterValue("EyeUV", FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
+		FaceMaterialInstance->SetVectorParameterValue("MouthUV", FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
+	}
+
+
+
+
+
+
+
 }
 
 // Called every frame
@@ -26,6 +73,7 @@ void ANPC::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 
 // Called to bind functionality to input
 void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

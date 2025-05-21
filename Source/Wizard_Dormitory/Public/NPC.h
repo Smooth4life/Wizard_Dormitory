@@ -16,6 +16,10 @@ public:
 	// Sets default values for this character's properties
 	ANPC();
 
+	//외형적용 함수
+	UFUNCTION(BlueprintCallable)
+	void ApplayVisual(const FNPCVisualData& VisualData);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,5 +30,12 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	UPROPERTY()
+	UStaticMeshComponent* HairComponent;
+	UPROPERTY()
+	UMaterialInstanceDynamic* FaceMaterialInstance;
+
 
 };
