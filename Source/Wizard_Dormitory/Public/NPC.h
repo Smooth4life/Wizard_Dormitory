@@ -31,6 +31,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "NPC")
+	int32 FaceMaterialIndex = 0;
+
 private:
 	UPROPERTY()
 	UStaticMeshComponent* HairComponent;

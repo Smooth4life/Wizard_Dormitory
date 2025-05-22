@@ -29,7 +29,7 @@ void ANPC::BeginPlay()
 	//悼利 赣磐府倔积己
 	UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
 	FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
-	GetMesh()->SetMaterial(0, FaceMaterialInstance);
+	GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
 
 }
 
