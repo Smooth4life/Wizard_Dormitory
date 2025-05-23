@@ -33,7 +33,7 @@ void ANPC::BeginPlay()
 
 }
 
-void ANPC::ApplayVisual(const FNPCVisualData& VisualData)
+void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 {
 	//headSocket 머리소켓 이름
 	//머리에 헤어 붙이기

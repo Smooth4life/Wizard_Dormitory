@@ -18,7 +18,7 @@ public:
 
 	//외형적용 함수
 	UFUNCTION(BlueprintCallable)
-	void ApplayVisual(const FNPCVisualData& VisualData);
+	void ApplyVisual(const FNPCVisualData& VisualData);
 
 protected:
 	// Called when the game starts or when spawned
