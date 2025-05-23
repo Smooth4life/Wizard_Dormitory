@@ -30,6 +30,10 @@ void APlayGameModeBase::SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector
 		FNPCVisualData Visual = ConvertSeedToVisual(Seed, NPCLibrary);
 		NPC->ApplyVisual(Visual);
 	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("1"));
+	}
 
 
 }
