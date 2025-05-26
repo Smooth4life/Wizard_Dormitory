@@ -61,12 +61,6 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		FaceMaterialInstance->SetVectorParameterValue("MouthUV", FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
 	}
 
-
-
-
-
-
-
 }
 
 void ANPC::NotifyExitComplete()

@@ -49,7 +49,7 @@ public:
     // 현재 순번 인덱스
     int32 CurrentSeedIndex = 0;
 
-    // 시드 생성
+    // 시드 배열 생성 함수
     UFUNCTION(BlueprintCallable, Category = "NPC")
     void GenerateNPCSeeds();
 
@@ -63,7 +63,7 @@ public:
     // 테스트용 직접 스폰 (다수 생성용)
     void SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& Location);
 
-    // 랜덤 시드 생성
+    // 단일 랜덤 시드 생성 함수
     FNPCSeedData GenerateRandomSeed() const;
 
 };
