@@ -2,6 +2,8 @@
 
 
 #include "NPC.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayGameModeBase.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -65,6 +67,34 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 
 
 
+}
+
+void ANPC::NotifyExitComplete()
+{
+	if (APlayGameModeBase* GM = Cast<APlayGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		GM->ApplyNextSeed(); // 다음 NPC 처리
+	}
+}
+
+void ANPC::NotifyReturnComplete()
+{
+	if (APlayGameModeBase* GM = Cast<APlayGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		GM->ApplyNextSeed(); // 다음 NPC 처리
+	}
+}
+
+void ANPC::HandleNPCDecision(bool bAccepted)
+{
+	if (bAccepted)
+	{
+		StartExit(); // 출구로 이동
+	}
+	else
+	{
+		StartReturn(); // 입구로 복귀
+	}
 }
 
 // Called every frame
