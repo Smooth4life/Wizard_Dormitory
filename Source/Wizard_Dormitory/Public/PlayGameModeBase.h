@@ -38,6 +38,7 @@ public:
     // 재사용될 NPC (레벨에 배치)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
     class ANPC* ReusableNPC;
+    //TSubclassOf<ANPC> ReusableNPC;
 
     // 통과 / 불통과 수 카운트
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
@@ -49,21 +50,28 @@ public:
     // 현재 순번 인덱스
     int32 CurrentSeedIndex = 0;
 
-    // 시드 배열 생성 함수
-    UFUNCTION(BlueprintCallable, Category = "NPC")
-    void GenerateNPCSeeds();
+
 
     // 판단 결과에 따라 처리 (통과/불통과)
     UFUNCTION(BlueprintCallable, Category = "NPC")
     void EvaluateNPC(bool bAccepted);
 
     // 다음 NPC 적용
+    UFUNCTION(BlueprintCallable, Category = "NPC")
     void ApplyNextSeed();
 
-    // 테스트용 직접 스폰 (다수 생성용)
-    void SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& Location);
+
+    // 시드 배열 생성 함수
+    UFUNCTION(BlueprintCallable, Category = "NPC")
+    void GenerateNPCSeeds();
 
     // 단일 랜덤 시드 생성 함수
     FNPCSeedData GenerateRandomSeed() const;
 
+    void AutoBindReusableNPC();
+
+
+
+    // 테스트용 직접 스폰 (다수 생성용)
+    void SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& Location);
 };

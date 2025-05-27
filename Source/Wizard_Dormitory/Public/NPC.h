@@ -19,11 +19,11 @@ public:
 	//외형적용 함수
 	UFUNCTION(BlueprintCallable)
 	void ApplyVisual(const FNPCVisualData& VisualData);
-
+	/*
 	// 입장 시작 (BP에서 이동/애니메이션 구현)
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartEntrance();
-
+	*/
 	// 출구 이동
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartExit();
@@ -31,6 +31,7 @@ public:
 	// 입구로 복귀
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartReturn();
+	
 
 	// 출구 도착 후 호출
 	UFUNCTION(BlueprintCallable, Category = "NPC")
@@ -65,5 +66,5 @@ private:
 	UPROPERTY()
 	UMaterialInstanceDynamic* FaceMaterialInstance;
 
-
+	
 };

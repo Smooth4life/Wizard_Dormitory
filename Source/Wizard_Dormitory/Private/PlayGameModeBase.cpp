@@ -5,6 +5,7 @@
 #include "NPC.h"
 #include "NPCUtils.h"
 #include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
 
 void APlayGameModeBase::BeginPlay()
 {
@@ -27,7 +28,9 @@ void APlayGameModeBase::BeginPlay()
 		FVector SpawnLocation = FVector(0.f, 0.f, 100.f);
 		SpawnNPCWithSeed(GeneratedSeeds[0], SpawnLocation);
 	}
-	
+	*/
+	/*
+	GenerateNPCSeeds();
 	// 생성된 모든 시드를 이용해 NPC 여러 명 스폰
 	const float SpawnSpacing = 200.f; // 간격 설정
 
@@ -37,9 +40,12 @@ void APlayGameModeBase::BeginPlay()
 		SpawnNPCWithSeed(GeneratedSeeds[i], SpawnLocation);
 	}
 	*/
+
+	AutoBindReusableNPC();
 	// 시드 배열 생성 및 첫 NPC 적용
 	GenerateNPCSeeds();
 	ApplyNextSeed();
+	
 }
 
 void APlayGameModeBase::GenerateNPCSeeds()
@@ -54,7 +60,7 @@ void APlayGameModeBase::GenerateNPCSeeds()
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d NPC Seeds"), GeneratedSeeds.Num());
 
 }
-
+//테스트용
 void APlayGameModeBase::SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& SpawnLocation)
 {
 	if (!NPCClass)return;
@@ -83,6 +89,8 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 	return Seed;
 }
 
+
+
 void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 {
 	// 통계 카운트
@@ -96,21 +104,53 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	}
 
 	// NPC에 결과 전달 → 퇴장 또는 복귀
-	ReusableNPC->HandleNPCDecision(bAccepted);
+	//ReusableNPC->HandleNPCDecision(bAccepted);
 }
 
+void APlayGameModeBase::AutoBindReusableNPC()
+{
+	if (!ReusableNPC)
+	{
+		/*
+		for (TActorIterator<ANPC> It(GetWorld()); It; ++It)
+		{
+			ReusableNPC = *It;
+			UE_LOG(LogTemp, Warning, TEXT("Auto-bound ReusableNPC: %s"), *ReusableNPC->GetName());
+			break;
+		}
+		*/
+		for (TActorIterator<ANPC> It(GetWorld()); It; ++It)
+		{
+			if (It->ActorHasTag("original"))
+			{
+				ReusableNPC = *It;
+				break;
+			}
+		}
+	}
+
+	if (!ReusableNPC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ReusableNPC was not found in level!"));
+		return;
+	}
+}
 
 void APlayGameModeBase::ApplyNextSeed()
 {
+
 	if (!GeneratedSeeds.IsValidIndex(CurrentSeedIndex)) return;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("AAAAAAA"));
+
 	if (!ReusableNPC) return;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("BBBBBB"));
 
 	// 시드 → 외형 → NPC 적용
 	const FNPCSeedData& Seed = GeneratedSeeds[CurrentSeedIndex];
 	const FNPCVisualData Visual = ConvertSeedToVisual(Seed, NPCLibrary);
 
 	ReusableNPC->ApplyVisual(Visual);
-	ReusableNPC->StartEntrance(); // 입장 애니메이션 시작 (BP)
+	//ReusableNPC->StartEntrance(); // 입장 애니메이션 시작 (BP)
 
 	++CurrentSeedIndex;
 }

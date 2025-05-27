@@ -91,6 +91,7 @@ void ANPC::HandleNPCDecision(bool bAccepted)
 	}
 }
 
+
 // Called every frame
 void ANPC::Tick(float DeltaTime)
 {
