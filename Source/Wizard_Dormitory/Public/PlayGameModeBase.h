@@ -40,6 +40,9 @@ public:
     class ANPC* ReusableNPC;
     //TSubclassOf<ANPC> ReusableNPC;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
+    class ANPC* GuestNPC;
+
     // 통과 / 불통과 수 카운트
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumAccepted = 0;
@@ -67,6 +70,9 @@ public:
 
     // 단일 랜덤 시드 생성 함수
     FNPCSeedData GenerateRandomSeed() const;
+
+    FNPCSeedData GenerateGuestSeedFromOriginal(const FNPCSeedData& Original, bool bIsNormal) const;
+
 
     void AutoBindReusableNPC();
 
