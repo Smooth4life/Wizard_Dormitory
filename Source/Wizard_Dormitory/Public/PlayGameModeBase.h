@@ -40,6 +40,9 @@ public:
     class ANPC* ReusableNPC;
     //TSubclassOf<ANPC> ReusableNPC;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
+    class ANPC* GuestNPC;
+
     // 통과 / 불통과 수 카운트
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumAccepted = 0;

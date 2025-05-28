@@ -91,6 +91,8 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 
 
 
+
+
 void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 {
 	// 통계 카운트
@@ -111,22 +113,20 @@ void APlayGameModeBase::AutoBindReusableNPC()
 {
 	if (!ReusableNPC)
 	{
-		/*
 		for (TActorIterator<ANPC> It(GetWorld()); It; ++It)
 		{
-			ReusableNPC = *It;
-			UE_LOG(LogTemp, Warning, TEXT("Auto-bound ReusableNPC: %s"), *ReusableNPC->GetName());
-			break;
-		}
-		*/
-		for (TActorIterator<ANPC> It(GetWorld()); It; ++It)
-		{
-			if (It->ActorHasTag("original"))
+			if (!ReusableNPC && It->ActorHasTag("original"))
 			{
 				ReusableNPC = *It;
-				break;
+				UE_LOG(LogTemp, Warning, TEXT("Bound ReusableNPC: %s"), *ReusableNPC->GetName());
 			}
-		}
+			else if (!GuestNPC && It->ActorHasTag("guest"))
+			{
+				GuestNPC = *It;
+				UE_LOG(LogTemp, Warning, TEXT("Bound GuestNPC: %s"), *GuestNPC->GetName());
+			}
+
+			if (ReusableNPC && GuestNPC) break;
 	}
 
 	if (!ReusableNPC)
