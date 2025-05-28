@@ -71,6 +71,9 @@ public:
     // 단일 랜덤 시드 생성 함수
     FNPCSeedData GenerateRandomSeed() const;
 
+    FNPCSeedData GenerateGuestSeedFromOriginal(const FNPCSeedData& Original, bool bIsNormal) const;
+
+
     void AutoBindReusableNPC();
 
 

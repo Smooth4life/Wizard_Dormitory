@@ -9,38 +9,6 @@
 
 void APlayGameModeBase::BeginPlay()
 {
-	/*
-	
-	FNPCSeedData TestSeed;
-	TestSeed.HairIndex = 1;
-	TestSeed.EyeIndex = 0;
-	TestSeed.MouthIndex = 2;
-
-	FVector SpawnLocation(0, 0, 100.0f);
-	SpawnNPCWithSeed(TestSeed, SpawnLocation);
-	
-	// 시드 배열 생성
-	GenerateNPCSeeds();
-	
-	// 테스트: 첫 번째 시드로 NPC 1명 생성
-	if (GeneratedSeeds.Num() > 0)
-	{
-		FVector SpawnLocation = FVector(0.f, 0.f, 100.f);
-		SpawnNPCWithSeed(GeneratedSeeds[0], SpawnLocation);
-	}
-	*/
-	/*
-	GenerateNPCSeeds();
-	// 생성된 모든 시드를 이용해 NPC 여러 명 스폰
-	const float SpawnSpacing = 200.f; // 간격 설정
-
-	for (int32 i = 0; i < GeneratedSeeds.Num(); ++i)
-	{
-		FVector SpawnLocation = FVector(i * SpawnSpacing, 0.f, 100.f);
-		SpawnNPCWithSeed(GeneratedSeeds[i], SpawnLocation);
-	}
-	*/
-
 	AutoBindReusableNPC();
 	// 시드 배열 생성 및 첫 NPC 적용
 	GenerateNPCSeeds();
@@ -86,7 +54,62 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 	if (NPCLibrary.MouthUVs.Num() > 0)
 		Seed.MouthIndex = FMath::RandRange(0, NPCLibrary.MouthUVs.Num() - 1);
 
+	Seed.bIsNormal = FMath::RandBool();
+
 	return Seed;
+}
+
+FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData& Original, bool bIsNormal) const
+{
+	if (bIsNormal)
+	{
+		return Original; // 정상인 경우는 원본과 동일
+	}
+
+	FNPCSeedData Modified = Original;
+
+	// 최소 1개 이상은 다르게 만들어야 하므로 무작위로 몇 개 변경
+	TArray<TFunction<void()>> Modifiers;
+
+	if (NPCLibrary.HairMeshes.Num() > 1)
+	{
+		Modifiers.Add([&]() {
+			do {
+				Modified.HairIndex = FMath::RandRange(0, NPCLibrary.HairMeshes.Num() - 1);
+			} while (Modified.HairIndex == Original.HairIndex);
+			});
+	}
+
+	if (NPCLibrary.EyeUVs.Num() > 1)
+	{
+		Modifiers.Add([&]() {
+			do {
+				Modified.EyeIndex = FMath::RandRange(0, NPCLibrary.EyeUVs.Num() - 1);
+			} while (Modified.EyeIndex == Original.EyeIndex);
+			});
+	}
+
+	if (NPCLibrary.MouthUVs.Num() > 1)
+	{
+		Modifiers.Add([&]() {
+			do {
+				Modified.MouthIndex = FMath::RandRange(0, NPCLibrary.MouthUVs.Num() - 1);
+			} while (Modified.MouthIndex == Original.MouthIndex);
+			});
+
+	}
+
+	// 무작위로 최소 1개 이상 실행
+	int32 NumChanges = FMath::RandRange(1, Modifiers.Num());
+	Modifiers.Sort([](auto&, auto&) { return FMath::RandBool(); }); // 셔플
+
+	for (int32 i = 0; i < NumChanges; ++i)
+	{
+		Modifiers[i]();
+	}
+
+	Modified.bIsNormal = false;
+	return Modified;
 }
 
 
@@ -118,15 +141,14 @@ void APlayGameModeBase::AutoBindReusableNPC()
 			if (!ReusableNPC && It->ActorHasTag("original"))
 			{
 				ReusableNPC = *It;
-				UE_LOG(LogTemp, Warning, TEXT("Bound ReusableNPC: %s"), *ReusableNPC->GetName());
 			}
 			else if (!GuestNPC && It->ActorHasTag("guest"))
 			{
 				GuestNPC = *It;
-				UE_LOG(LogTemp, Warning, TEXT("Bound GuestNPC: %s"), *GuestNPC->GetName());
 			}
 
 			if (ReusableNPC && GuestNPC) break;
+		}
 	}
 
 	if (!ReusableNPC)
@@ -138,19 +160,47 @@ void APlayGameModeBase::AutoBindReusableNPC()
 
 void APlayGameModeBase::ApplyNextSeed()
 {
-
+	// 시드 인덱스 확인
 	if (!GeneratedSeeds.IsValidIndex(CurrentSeedIndex)) return;
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("AAAAAAA"));
 
-	if (!ReusableNPC) return;
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("BBBBBB"));
+	const FNPCSeedData& OriginalSeed = GeneratedSeeds[CurrentSeedIndex];
 
-	// 시드 → 외형 → NPC 적용
-	const FNPCSeedData& Seed = GeneratedSeeds[CurrentSeedIndex];
-	const FNPCVisualData Visual = ConvertSeedToVisual(Seed, NPCLibrary);
+	// 오리지널 NPC 적용
+	if (ReusableNPC)
+	{
+		FNPCVisualData Visual = ConvertSeedToVisual(OriginalSeed, NPCLibrary);
+		ReusableNPC->ApplyVisual(Visual);
+		// ReusableNPC->StartEntrance(); // 필요시 애니메이션 시작
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ReusableNPC is null"));
+	}
 
-	ReusableNPC->ApplyVisual(Visual);
-	//ReusableNPC->StartEntrance(); // 입장 애니메이션 시작 (BP)
+	// 게스트 NPC 적용
+	if (GuestNPC)
+	{
+		FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
+		FNPCVisualData GuestVisual = ConvertSeedToVisual(GuestSeed, NPCLibrary);
+		GuestNPC->ApplyVisual(GuestVisual);
+		// GuestNPC->StartEntrance(); // 필요시 애니메이션 시작
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GuestNPC is null"));
+	}
 
 	++CurrentSeedIndex;
+
+	//시드값 적용 확인용
+	/*
+	UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d | IsNormal=%s"),
+		OriginalSeed.HairIndex, OriginalSeed.EyeIndex, OriginalSeed.MouthIndex, OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
+
+	FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
+
+	UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d | IsNormal=%s"),
+		GuestSeed.HairIndex, GuestSeed.EyeIndex, GuestSeed.MouthIndex, GuestSeed.bIsNormal ? TEXT("true") : TEXT("false"));
+		*/
+
 }
