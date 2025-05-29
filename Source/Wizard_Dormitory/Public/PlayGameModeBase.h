@@ -43,10 +43,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
     class ANPC* GuestNPC;
 
-    // 통과 / 불통과 수 카운트
+    // 통과시킨 인원수(정답만)
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumAccepted = 0;
-
+    //오답횟수
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumRejected = 0;
 

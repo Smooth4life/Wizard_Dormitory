@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "PlayGameModeBase.h"
@@ -10,7 +10,7 @@
 void APlayGameModeBase::BeginPlay()
 {
 	AutoBindReusableNPC();
-	// �õ� �迭 ���� �� ù NPC ����
+	// 시드 배열 생성 및 첫 NPC 적용
 	GenerateNPCSeeds();
 	ApplyNextSeed();
 	
@@ -20,15 +20,44 @@ void APlayGameModeBase::GenerateNPCSeeds()
 {
 	GeneratedSeeds.Empty();
 
-	for (int32 i = 0; i < NumNPCToGenerate; ++i)
+	int32 Created = 0;
+	int32 Attempts = 0;
+	const int32 MaxAttempts = NumNPCToGenerate * 10; // 무한 루프 방지용
+
+	while (Created < NumNPCToGenerate && Attempts < MaxAttempts)
 	{
-		GeneratedSeeds.Add(GenerateRandomSeed());
+		++Attempts;
+
+		FNPCSeedData NewSeed = GenerateRandomSeed();
+
+		// 중복 검사
+		bool bIsDuplicate = GeneratedSeeds.ContainsByPredicate([&](const FNPCSeedData& Existing)
+			{
+				return NewSeed.HairIndex == Existing.HairIndex &&
+					NewSeed.EyeIndex == Existing.EyeIndex &&
+					NewSeed.MouthIndex == Existing.MouthIndex &&
+					NewSeed.bIsNormal == Existing.bIsNormal;
+			});
+
+		if (!bIsDuplicate)
+		{
+			GeneratedSeeds.Add(NewSeed);
+			++Created;
+		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Generated %d NPC Seeds"), GeneratedSeeds.Num());
+	if (Created < NumNPCToGenerate)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("중복 회피 실패: %d개만 생성됨 (요청: %d)"), Created, NumNPCToGenerate);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" %d개의 중복 없는 시드 생성 완료"), Created);
+	}
+
 
 }
-//�׽�Ʈ��
+//테스트용
 void APlayGameModeBase::SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& SpawnLocation)
 {
 	if (!NPCClass)return;
@@ -63,16 +92,19 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 {
 	if (bIsNormal)
 	{
-		return Original; // ������ ���� ������ ����
+		return Original; // 정상인 경우는 원본과 동일
 	}
 
 	FNPCSeedData Modified = Original;
 
-	// �ּ� 1�� �̻��� �ٸ��� ������ �ϹǷ� �������� �� �� ����
+	// 최소 1개 이상은 다르게 만들어야 하므로 무작위로 몇 개 변경
 	TArray<TFunction<void()>> Modifiers;
 
-	if (NPCLibrary.HairMeshes.Num() > 1)
+	// 머리 인덱스 변경 가능할 경우만 Modifier 추가
+	if (NPCLibrary.HairMeshes.Num() > 1)// 2개 이상 있어야 다른 값 선택 가능
 	{
+		// 람다 함수: HairIndex를 Original과 다른 값으로 무작위 설정
+		// 이 함수는 지금 실행하지 않고, 나중에 랜덤으로 선택하여 실행함
 		Modifiers.Add([&]() {
 			do {
 				Modified.HairIndex = FMath::RandRange(0, NPCLibrary.HairMeshes.Num() - 1);
@@ -82,10 +114,11 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 
 	if (NPCLibrary.EyeUVs.Num() > 1)
 	{
+		// EyeIndex를 무작위로 바꾸되, 원본과 같은 값은 피함
 		Modifiers.Add([&]() {
 			do {
 				Modified.EyeIndex = FMath::RandRange(0, NPCLibrary.EyeUVs.Num() - 1);
-			} while (Modified.EyeIndex == Original.EyeIndex);
+			} while (Modified.EyeIndex == Original.EyeIndex);//Modified.EyeIndex에 랜덤한 값을 넣되,그 값이 Original.EyeIndex와 같다면 다시 뽑아라
 			});
 	}
 
@@ -99,13 +132,18 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 
 	}
 
-	// �������� �ּ� 1�� �̻� ����
+	// 무작위로 몇 개 항목을 변경할지 결정 (최소 1개 ~ 최대 전체)
 	int32 NumChanges = FMath::RandRange(1, Modifiers.Num());
-	Modifiers.Sort([](auto&, auto&) { return FMath::RandBool(); }); // ����
 
+	// Modifiers 배열의 순서를 무작위로 섞음 (셔플)
+	// 이 정렬 방식은 두 요소의 순서를 비교할 때 FMath::RandBool()을 사용하여 무작위 결과를 만들기 때문에
+	// 결과적으로 전체 배열의 순서가 랜덤하게 섞이게 됨
+	Modifiers.Sort([](auto&, auto&) { return FMath::RandBool(); }); // 셔플
+
+	// 앞에서부터 NumChanges 개수만큼의 람다를 실행하여 실제로 Modified 값을 변경
 	for (int32 i = 0; i < NumChanges; ++i)
 	{
-		Modifiers[i]();
+		Modifiers[i]();// 여기서 HairIndex, EyeIndex, MouthIndex 중 일부가 바뀜
 	}
 
 	Modified.bIsNormal = false;
@@ -125,7 +163,7 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	}
 
 	const FNPCSeedData& CurrentSeed = GeneratedSeeds[CurrentSeedIndex - 1];
-
+	/*
 	const bool bIsCorrect = (bAccepted == CurrentSeed.bIsNormal);
 
 	if (bIsCorrect)
@@ -138,8 +176,36 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 		++NumRejected;
 		UE_LOG(LogTemp, Warning, TEXT("false"));
 	}
+	*/
+	/////////////////////////
+	const bool bIsActuallyNormal = CurrentSeed.bIsNormal;
+
+	// 판단 분기
+	if (bAccepted && bIsActuallyNormal)
+	{
+		++NumAccepted;
+		UE_LOG(LogTemp, Warning, TEXT("정상 NPC를 통과시켰습니다. (정답)"));
+	}
+	else if (bAccepted && !bIsActuallyNormal)
+	{
+		++NumRejected;
+		UE_LOG(LogTemp, Warning, TEXT("비정상 NPC를 통과시켰습니다! (오답)"));
+	}
+	else if (!bAccepted && bIsActuallyNormal)
+	{
+		++NumRejected;
+		UE_LOG(LogTemp, Warning, TEXT("정상 NPC를 불통과시켰습니다! (오답)"));
+	}
 	/*
-	// �Խ�Ʈ NPC�� �ִϸ��̼� ����
+	else if (!bAccepted && !bIsActuallyNormal)
+	{
+		++NumAccepted;
+		UE_LOG(LogTemp, Warning, TEXT("비정상 NPC를 불통과시켰습니다. (정답)"));
+	}
+	*/
+
+	/*
+	// 게스트 NPC에 애니메이션 전달
 	if (GuestNPC)
 	{
 		GuestNPC->HandleNPCDecision(bAccepted);
@@ -175,30 +241,30 @@ void APlayGameModeBase::AutoBindReusableNPC()
 
 void APlayGameModeBase::ApplyNextSeed()
 {
-	// �õ� �ε��� Ȯ��
+	// 시드 인덱스 확인
 	if (!GeneratedSeeds.IsValidIndex(CurrentSeedIndex)) return;
 
 	const FNPCSeedData& OriginalSeed = GeneratedSeeds[CurrentSeedIndex];
 
-	// �������� NPC ����
+	// 오리지널 NPC 적용
 	if (ReusableNPC)
 	{
 		FNPCVisualData Visual = ConvertSeedToVisual(OriginalSeed, NPCLibrary);
 		ReusableNPC->ApplyVisual(Visual);
-		// ReusableNPC->StartEntrance(); // �ʿ�� �ִϸ��̼� ����
+		// ReusableNPC->StartEntrance(); // 필요시 애니메이션 시작
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ReusableNPC is null"));
 	}
 
-	// �Խ�Ʈ NPC ����
+	// 게스트 NPC 적용
 	if (GuestNPC)
 	{
 		FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
 		FNPCVisualData GuestVisual = ConvertSeedToVisual(GuestSeed, NPCLibrary);
 		GuestNPC->ApplyVisual(GuestVisual);
-		// GuestNPC->StartEntrance(); // �ʿ�� �ִϸ��̼� ����
+		// GuestNPC->StartEntrance(); // 필요시 애니메이션 시작
 	}
 	else
 	{
@@ -207,7 +273,7 @@ void APlayGameModeBase::ApplyNextSeed()
 
 	++CurrentSeedIndex;
 
-	//�õ尪 ���� Ȯ�ο�
+	//시드값 적용 확인용
 	/*
 	UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d | IsNormal=%s"),
 		OriginalSeed.HairIndex, OriginalSeed.EyeIndex, OriginalSeed.MouthIndex, OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
