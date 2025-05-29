@@ -118,18 +118,33 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 
 void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 {
-	// 통계 카운트
-	if (bAccepted)
+	if (!GeneratedSeeds.IsValidIndex(CurrentSeedIndex - 1))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No current seed to evaluate"));
+		return;
+	}
+
+	const FNPCSeedData& CurrentSeed = GeneratedSeeds[CurrentSeedIndex - 1];
+
+	const bool bIsCorrect = (bAccepted == CurrentSeed.bIsNormal);
+
+	if (bIsCorrect)
 	{
 		++NumAccepted;
+		UE_LOG(LogTemp, Warning, TEXT("true"));
 	}
 	else
 	{
 		++NumRejected;
+		UE_LOG(LogTemp, Warning, TEXT("false"));
 	}
-
-	// NPC에 결과 전달 → 퇴장 또는 복귀
-	//ReusableNPC->HandleNPCDecision(bAccepted);
+	/*
+	// 게스트 NPC에 애니메이션 전달
+	if (GuestNPC)
+	{
+		GuestNPC->HandleNPCDecision(bAccepted);
+	}
+	*/
 }
 
 void APlayGameModeBase::AutoBindReusableNPC()
