@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "NiagaraSystem.h"
 #include "NPCStructs.generated.h"
 /**
- * ¾ó±¼ ¿ä¼Ò µ¥ÀÌÅÍ (´«/ÀÔ ÅØ½ºÃ³ ÁÂÇ¥ Á¤º¸)
+ * ì–¼êµ´ ìš”ì†Œ ë°ì´í„° (ëˆˆ/ì… í…ìŠ¤ì²˜ ì¢Œí‘œ ì •ë³´)
  */
 USTRUCT(BlueprintType)
 struct FNPCFaceData
@@ -20,7 +20,7 @@ struct FNPCFaceData
 };
 
 /**
- * NPC ÀüÃ¼ ¿ÜÇü µ¥ÀÌÅÍ
+ * NPC ì „ì²´ ì™¸í˜• ë°ì´í„°
  */
 USTRUCT(BlueprintType)
 struct FNPCVisualData
@@ -36,7 +36,7 @@ struct FNPCVisualData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UNiagaraSystem* AffiliationEffect = nullptr;
 
-    // ½ÇÁ¦·Î »ç¿ëÇÒ NPC ÀÌ¸§
+    // ì‹¤ì œë¡œ ì‚¬ìš©í•  NPC ì´ë¦„
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DisplayName;
 

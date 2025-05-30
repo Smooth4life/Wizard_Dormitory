@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,40 +16,40 @@ public:
 	// Sets default values for this character's properties
 	ANPC();
 
-	//¿ÜÇüÀû¿ë ÇÔ¼ö
+	//ì™¸í˜•ì ìš© í•¨ìˆ˜
 	UFUNCTION(BlueprintCallable)
 	void ApplyVisual(const FNPCVisualData& VisualData);
 	/*
-	// ÀÔÀå ½ÃÀÛ (BP¿¡¼­ ÀÌµ¿/¾Ö´Ï¸ŞÀÌ¼Ç ±¸Çö)
+	// ì…ì¥ ì‹œì‘ (BPì—ì„œ ì´ë™/ì• ë‹ˆë©”ì´ì…˜ êµ¬í˜„)
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartEntrance();
 	*/
-	// Ãâ±¸ ÀÌµ¿
+	// ì¶œêµ¬ ì´ë™
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartExit();
 
-	// ÀÔ±¸·Î º¹±Í
+	// ì…êµ¬ë¡œ ë³µê·€
 	UFUNCTION(BlueprintImplementableEvent, Category = "NPC")
 	void StartReturn();
 	
 
-	// Ãâ±¸ µµÂø ÈÄ È£Ãâ
+	// ì¶œêµ¬ ë„ì°© í›„ í˜¸ì¶œ
 	UFUNCTION(BlueprintCallable, Category = "NPC")
 	void NotifyExitComplete();
 
-	// ÀÔ±¸ µµÂø ÈÄ È£Ãâ
+	// ì…êµ¬ ë„ì°© í›„ í˜¸ì¶œ
 	UFUNCTION(BlueprintCallable, Category = "NPC")
 	void NotifyReturnComplete();
 
-	// ÇÃ·¹ÀÌ¾î ÆÇ´Ü Àü´Ş
+	// í”Œë ˆì´ì–´ íŒë‹¨ ì „ë‹¬
 	UFUNCTION(BlueprintCallable, Category = "NPC")
 	void HandleNPCDecision(bool bAccepted);
 
-	// ¼Ò¼Ó ÀÌÆåÆ® º¸¿©ÁÖ±â (¼Õ À§¿¡ ½ºÆù)
+	// ì†Œì† ì´í™íŠ¸ ë³´ì—¬ì£¼ê¸° (ì† ìœ„ì— ìŠ¤í°)
 	UFUNCTION(BlueprintCallable, Category = "Affiliation")
 	void ShowAffiliationEffect(UNiagaraSystem* Effect);
 
-	// ¼Ò¼Ó ÀÌÆåÆ® Á¦°Å
+	// ì†Œì† ì´í™íŠ¸ ì œê±°
 	UFUNCTION(BlueprintCallable, Category = "Affiliation")
 	void HideAffiliationEffect();
 

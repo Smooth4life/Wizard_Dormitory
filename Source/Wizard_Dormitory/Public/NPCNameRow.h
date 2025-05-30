@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -10,5 +10,5 @@ struct FNPCNameRow : public FTableRowBase
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Name;//"Name"Àº CSV ¿­ ÀÌ¸§°ú ÀÏÄ¡ÇØ¾ß ÇÔ
+    FString Name;//"Name"ì€ CSV ì—´ ì´ë¦„ê³¼ ì¼ì¹˜í•´ì•¼ í•¨
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -19,23 +19,23 @@ class WIZARD_DORMITORY_API APlayGameModeBase : public AGameModeBase
 public:
 	virtual void BeginPlay() override;
 
-    // NPC ºí·çÇÁ¸°Æ® Å¬·¡½º
+    // NPC ë¸”ë£¨í”„ë¦°íŠ¸ í´ë˜ìŠ¤
     UPROPERTY(EditDefaultsOnly, Category = "NPC")
     TSubclassOf<class ANPC> NPCClass;
 
-    // NPC ¿ÜÇü µ¥ÀÌÅÍ ¶óÀÌºê·¯¸®
+    // NPC ì™¸í˜• ë°ì´í„° ë¼ì´ë¸ŒëŸ¬ë¦¬
     UPROPERTY(EditDefaultsOnly, Category = "NPC")
     FNPCLibrary NPCLibrary;
 
-    // »ı¼ºÇÒ NPC ¼ö (ºí·çÇÁ¸°Æ®¿¡¼­ Á¶Àı °¡´É)
+    // ìƒì„±í•  NPC ìˆ˜ (ë¸”ë£¨í”„ë¦°íŠ¸ì—ì„œ ì¡°ì ˆ ê°€ëŠ¥)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
     int32 NumNPCToGenerate = 5;
 
-    // »ı¼ºµÈ ½Ãµå ¹è¿­
+    // ìƒì„±ëœ ì‹œë“œ ë°°ì—´
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     TArray<FNPCSeedData> GeneratedSeeds;
 
-    // Àç»ç¿ëµÉ NPC (·¹º§¿¡ ¹èÄ¡)
+    // ì¬ì‚¬ìš©ë  NPC (ë ˆë²¨ì— ë°°ì¹˜)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
     class ANPC* ReusableNPC;
     //TSubclassOf<ANPC> ReusableNPC;
@@ -43,36 +43,36 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
     class ANPC* GuestNPC;
 
-    // Åë°ú½ÃÅ² ÀÎ¿ø¼ö(Á¤´ä¸¸)
+    // í†µê³¼ì‹œí‚¨ ì¸ì›ìˆ˜(ì •ë‹µë§Œ)
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumAccepted = 0;
-    //¿À´äÈ½¼ö
+    //ì˜¤ë‹µíšŸìˆ˜
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumRejected = 0;
 
-    // ÇöÀç ¼ø¹ø ÀÎµ¦½º
+    // í˜„ì¬ ìˆœë²ˆ ì¸ë±ìŠ¤
     int32 CurrentSeedIndex = 0;
 
-    //µ¥ÀÌÅÍ Å×ÀÌºí DataTable
+    //ë°ì´í„° í…Œì´ë¸” DataTable
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
     UDataTable* NameTable;
 
 
 
-    // ÆÇ´Ü °á°ú¿¡ µû¶ó Ã³¸® (Åë°ú/ºÒÅë°ú)
+    // íŒë‹¨ ê²°ê³¼ì— ë”°ë¼ ì²˜ë¦¬ (í†µê³¼/ë¶ˆí†µê³¼)
     UFUNCTION(BlueprintCallable, Category = "NPC")
     void EvaluateNPC(bool bAccepted);
 
-    // ´ÙÀ½ NPC Àû¿ë
+    // ë‹¤ìŒ NPC ì ìš©
     UFUNCTION(BlueprintCallable, Category = "NPC")
     void ApplyNextSeed();
 
 
-    // ½Ãµå ¹è¿­ »ı¼º ÇÔ¼ö
+    // ì‹œë“œ ë°°ì—´ ìƒì„± í•¨ìˆ˜
     UFUNCTION(BlueprintCallable, Category = "NPC")
     void GenerateNPCSeeds();
 
-    // ´ÜÀÏ ·£´ı ½Ãµå »ı¼º ÇÔ¼ö
+    // ë‹¨ì¼ ëœë¤ ì‹œë“œ ìƒì„± í•¨ìˆ˜
     FNPCSeedData GenerateRandomSeed() const;
 
     FNPCSeedData GenerateGuestSeedFromOriginal(const FNPCSeedData& Original, bool bIsNormal) const;
@@ -82,6 +82,6 @@ public:
 
 
 
-    // Å×½ºÆ®¿ë Á÷Á¢ ½ºÆù (´Ù¼ö »ı¼º¿ë)
+    // í…ŒìŠ¤íŠ¸ìš© ì§ì ‘ ìŠ¤í° (ë‹¤ìˆ˜ ìƒì„±ìš©)
     void SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& Location);
 };

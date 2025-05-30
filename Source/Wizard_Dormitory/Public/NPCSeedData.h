@@ -1,12 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "NPCSeedData.generated.h"
 /**
- * NPC ¿ÜÇüÀ» °áÁ¤ÇÏ±â À§ÇÑ ÀÎµ¦½º ±â¹İ ½Ãµå µ¥ÀÌÅÍ
- * ¿ÜÇü ¿ä¼Ò ¹è¿­¿¡¼­ ÀÎµ¦½º·Î Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï ±¸¼ºµÊ
+ * NPC ì™¸í˜•ì„ ê²°ì •í•˜ê¸° ìœ„í•œ ì¸ë±ìŠ¤ ê¸°ë°˜ ì‹œë“œ ë°ì´í„°
+ * ì™¸í˜• ìš”ì†Œ ë°°ì—´ì—ì„œ ì¸ë±ìŠ¤ë¡œ ì ‘ê·¼í•  ìˆ˜ ìˆë„ë¡ êµ¬ì„±ë¨
  */
 
 USTRUCT(BlueprintType)
@@ -14,31 +14,31 @@ struct FNPCSeedData
 {
     GENERATED_BODY()
 
-    //Çì¾î ÀÎµ¦½º
+    //í—¤ì–´ ì¸ë±ìŠ¤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 HairIndex = 0;
 
-    // ´« ÀÎµ¦½º (Sprite Sheet UV ¸ñ·Ï ±âÁØ)
+    // ëˆˆ ì¸ë±ìŠ¤ (Sprite Sheet UV ëª©ë¡ ê¸°ì¤€)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EyeIndex = 0;
 
-    // ÀÔ ÀÎµ¦½º (Sprite Sheet UV ¸ñ·Ï ±âÁØ)
+    // ì… ì¸ë±ìŠ¤ (Sprite Sheet UV ëª©ë¡ ê¸°ì¤€)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MouthIndex = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsNormal;
 
-    // ¼Ò¼ÓÀ» ³ªÅ¸³»´Â ÀÌÆåÆ® ÀÎµ¦½º
+    // ì†Œì†ì„ ë‚˜íƒ€ë‚´ëŠ” ì´í™íŠ¸ ì¸ë±ìŠ¤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AffiliationEffectIndex = 0;
 
-    //ÀÌ¸§ ÀÎµ¦½º
+    //ì´ë¦„ ì¸ë±ìŠ¤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NameIndex = 0;
 
 
-    // ¹Ì·¡ È®Àå ´ëºñ (¿¹: ÇÇºÎ»ö, ¾È°æ, ¸ğÀÚ µî)
+    // ë¯¸ë˜ í™•ì¥ ëŒ€ë¹„ (ì˜ˆ: í”¼ë¶€ìƒ‰, ì•ˆê²½, ëª¨ì ë“±)
     // UPROPERTY(EditAnywhere, BlueprintReadWrite)
     // int32 SkinColorIndex = 0;
 

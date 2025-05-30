@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -8,30 +8,30 @@
 #include "NPCLibrary.h"
 #include <NPCNameRow.h>
 
-//½Ãµå¿Í ¿¡¼ÂÇ®À» »ç¿ëÇØ NPCÀÇ ¿ÜÇü µ¥ÀÌÅÍ¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö
+//ì‹œë“œì™€ ì—ì…‹í’€ì„ ì‚¬ìš©í•´ NPCì˜ ì™¸í˜• ë°ì´í„°ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
 
 static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCLibrary & Library, const UDataTable* NameTable)
 {
     FNPCVisualData Result;
 
-    // Çì¾î
+    // í—¤ì–´
     if (Library.HairMeshes.IsValidIndex(Seed.HairIndex))
     {
         Result.HairMesh = Library.HairMeshes[Seed.HairIndex];
     }
 
-    // ´«
+    // ëˆˆ
     if (Library.EyeUVs.IsValidIndex(Seed.EyeIndex))
     {
         Result.FaceData.EyeUV = Library.EyeUVs[Seed.EyeIndex];
     }
 
-    // ÀÔ
+    // ì…
     if (Library.MouthUVs.IsValidIndex(Seed.MouthIndex))
     {
         Result.FaceData.MouthUV = Library.MouthUVs[Seed.MouthIndex];
     }
-    //³ªÀÌ¾Æ°¡¶ó¼Ò¼Ó
+    //ë‚˜ì´ì•„ê°€ë¼ì†Œì†
     if (Library.AffiliationEffects.IsValidIndex(Seed.AffiliationEffectIndex))
     {
         Result.AffiliationEffect = Library.AffiliationEffects[Seed.AffiliationEffectIndex];

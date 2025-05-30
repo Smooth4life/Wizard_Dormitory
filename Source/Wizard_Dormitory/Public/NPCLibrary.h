@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -21,7 +21,7 @@ struct FNPCLibrary
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector2D> MouthUVs;
 
-    // ¼Ò¼Ó ÀÌÆåÆ®µé
+    // ì†Œì† ì´í™íŠ¸ë“¤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UNiagaraSystem*> AffiliationEffects;
 

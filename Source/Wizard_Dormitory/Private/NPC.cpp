@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "NPC.h"
@@ -13,7 +13,7 @@ ANPC::ANPC()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//¸Ş½Ã·Îµå
+	//ë©”ì‹œë¡œë“œ
 	ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		MeshAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'"));
 	if (MeshAsset.Succeeded())
@@ -31,7 +31,7 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
-	//µ¿Àû ¸ÓÅÍ¸®¾ó»ı¼º
+	//ë™ì  ë¨¸í„°ë¦¬ì–¼ìƒì„±
 	UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
 	FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
 	GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
@@ -40,11 +40,11 @@ void ANPC::BeginPlay()
 
 void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 {
-	//headSocket ¸Ó¸®¼ÒÄÏ ÀÌ¸§
-	//¸Ó¸®¿¡ Çì¾î ºÙÀÌ±â
+	//headSocket ë¨¸ë¦¬ì†Œì¼“ ì´ë¦„
+	//ë¨¸ë¦¬ì— í—¤ì–´ ë¶™ì´ê¸°
 	if (VisualData.HairMesh)
 	{
-		//ÀÌ¹Ì Çì¾î°¡ ÀÖ´Ù¸é ¾ø¾Ö±â
+		//ì´ë¯¸ í—¤ì–´ê°€ ìˆë‹¤ë©´ ì—†ì• ê¸°
 		if (HairComponent)
 		{
 			HairComponent->DestroyComponent();
@@ -56,8 +56,8 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		HairComponent->RegisterComponent();
 	}
 
-	//¸ÓÅÍ¸®¾ó UVÆÄ¶ó¹ÌÅÍ Àû¿ë
-	//º¤ÅÍÆÄ¶ó¹ÌÅÍÀÇ ÀÌ¸§À» ¸ÂÃß¸é ¹Ù²ñ
+	//ë¨¸í„°ë¦¬ì–¼ UVíŒŒë¼ë¯¸í„° ì ìš©
+	//ë²¡í„°íŒŒë¼ë¯¸í„°ì˜ ì´ë¦„ì„ ë§ì¶”ë©´ ë°”ë€œ
 	if (FaceMaterialInstance)
 	{
 		FaceMaterialInstance->SetVectorParameterValue("EyeUV", FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
@@ -75,7 +75,7 @@ void ANPC::NotifyExitComplete()
 {
 	if (APlayGameModeBase* GM = Cast<APlayGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		GM->ApplyNextSeed(); // ´ÙÀ½ NPC Ã³¸®
+		GM->ApplyNextSeed(); // ë‹¤ìŒ NPC ì²˜ë¦¬
 	}
 }
 
@@ -83,7 +83,7 @@ void ANPC::NotifyReturnComplete()
 {
 	if (APlayGameModeBase* GM = Cast<APlayGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		GM->ApplyNextSeed(); // ´ÙÀ½ NPC Ã³¸®
+		GM->ApplyNextSeed(); // ë‹¤ìŒ NPC ì²˜ë¦¬
 	}
 }
 
@@ -91,11 +91,11 @@ void ANPC::HandleNPCDecision(bool bAccepted)
 {
 	if (bAccepted)
 	{
-		StartExit(); // Ãâ±¸·Î ÀÌµ¿
+		StartExit(); // ì¶œêµ¬ë¡œ ì´ë™
 	}
 	else
 	{
-		StartReturn(); // ÀÔ±¸·Î º¹±Í
+		StartReturn(); // ì…êµ¬ë¡œ ë³µê·€
 	}
 }
 
@@ -103,18 +103,18 @@ void ANPC::ShowAffiliationEffect(UNiagaraSystem* Effect)
 {
 	if (!CurrentVisualData.AffiliationEffect) return;
 
-	// ÀÌ¹Ì ºÙ¾î ÀÖÀ¸¸é Á¦°Å
+	// ì´ë¯¸ ë¶™ì–´ ìˆìœ¼ë©´ ì œê±°
 	if (AffiliationEffectComponent)
 	{
 		AffiliationEffectComponent->DestroyComponent();
 		AffiliationEffectComponent = nullptr;
 	}
 
-	// ¼Õ ¼ÒÄÏ¿¡ ºÎÂø
+	// ì† ì†Œì¼“ì— ë¶€ì°©
 	AffiliationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
 		CurrentVisualData.AffiliationEffect,
 		GetMesh(),
-		TEXT("hand_rSocket"),// ¼Õ ¼ÒÄÏ ÀÌ¸§ (½ºÄÌ·¹Å» ¸Ş½Ã¿¡ ½ÇÁ¦ ÀÖ´Â ÀÌ¸§ÀÌ¾î¾ß ÇÔ)
+		TEXT("hand_rSocket"),// ì† ì†Œì¼“ ì´ë¦„ (ìŠ¤ì¼ˆë ˆíƒˆ ë©”ì‹œì— ì‹¤ì œ ìˆëŠ” ì´ë¦„ì´ì–´ì•¼ í•¨)
 		FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		EAttachLocation::SnapToTargetIncludingScale,
