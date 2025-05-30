@@ -2,8 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "NiagaraSystem.h"
 #include "NPCStructs.generated.h"
-
 /**
  * 얼굴 요소 데이터 (눈/입 텍스처 좌표 정보)
  */
@@ -32,4 +32,12 @@ struct FNPCVisualData
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FNPCFaceData FaceData;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UNiagaraSystem* AffiliationEffect = nullptr;
+
+    // 실제로 사용할 NPC 이름
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString DisplayName;
+
 };

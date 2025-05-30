@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "NPCStructs.h"
+#include "NiagaraSystem.h"
 #include "NPCLibrary.generated.h"
 
 USTRUCT(BlueprintType)
@@ -19,4 +20,9 @@ struct FNPCLibrary
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector2D> MouthUVs;
+
+    // 소속 이펙트들
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UNiagaraSystem*> AffiliationEffects;
+
 };

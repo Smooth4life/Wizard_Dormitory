@@ -53,6 +53,10 @@ public:
     // 현재 순번 인덱스
     int32 CurrentSeedIndex = 0;
 
+    //데이터 테이블 DataTable
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
+    UDataTable* NameTable;
+
 
 
     // 판단 결과에 따라 처리 (통과/불통과)

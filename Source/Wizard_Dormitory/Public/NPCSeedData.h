@@ -29,6 +29,15 @@ struct FNPCSeedData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsNormal;
 
+    // 소속을 나타내는 이펙트 인덱스
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 AffiliationEffectIndex = 0;
+
+    //이름 인덱스
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 NameIndex = 0;
+
+
     // 미래 확장 대비 (예: 피부색, 안경, 모자 등)
     // UPROPERTY(EditAnywhere, BlueprintReadWrite)
     // int32 SkinColorIndex = 0;

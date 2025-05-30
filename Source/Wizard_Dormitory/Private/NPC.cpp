@@ -4,6 +4,9 @@
 #include "NPC.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayGameModeBase.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -61,6 +64,11 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		FaceMaterialInstance->SetVectorParameterValue("MouthUV", FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
 	}
 
+	CurrentVisualData = VisualData;
+	NPCDisplayName = VisualData.DisplayName;
+
+
+
 }
 
 void ANPC::NotifyExitComplete()
@@ -88,6 +96,38 @@ void ANPC::HandleNPCDecision(bool bAccepted)
 	else
 	{
 		StartReturn(); // 입구로 복귀
+	}
+}
+
+void ANPC::ShowAffiliationEffect(UNiagaraSystem* Effect)
+{
+	if (!CurrentVisualData.AffiliationEffect) return;
+
+	// 이미 붙어 있으면 제거
+	if (AffiliationEffectComponent)
+	{
+		AffiliationEffectComponent->DestroyComponent();
+		AffiliationEffectComponent = nullptr;
+	}
+
+	// 손 소켓에 부착
+	AffiliationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+		CurrentVisualData.AffiliationEffect,
+		GetMesh(),
+		TEXT("hand_rSocket"),// 손 소켓 이름 (스켈레탈 메시에 실제 있는 이름이어야 함)
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		EAttachLocation::SnapToTargetIncludingScale,
+		true
+	);
+}
+
+void ANPC::HideAffiliationEffect()
+{
+	if (AffiliationEffectComponent)
+	{
+		AffiliationEffectComponent->DestroyComponent();
+		AffiliationEffectComponent = nullptr;
 	}
 }
 

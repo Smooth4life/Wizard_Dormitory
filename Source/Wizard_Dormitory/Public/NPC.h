@@ -45,9 +45,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NPC")
 	void HandleNPCDecision(bool bAccepted);
 
+	// 소속 이펙트 보여주기 (손 위에 스폰)
+	UFUNCTION(BlueprintCallable, Category = "Affiliation")
+	void ShowAffiliationEffect(UNiagaraSystem* Effect);
+
+	// 소속 이펙트 제거
+	UFUNCTION(BlueprintCallable, Category = "Affiliation")
+	void HideAffiliationEffect();
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	class UNiagaraComponent* AffiliationEffectComponent = nullptr;
 
 public:	
 	// Called every frame
@@ -60,11 +72,21 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "NPC")
 	int32 FaceMaterialIndex = 0;
 
+	UPROPERTY()
+	FNPCVisualData CurrentVisualData;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString NPCDisplayName;
+
+
 private:
 	UPROPERTY()
 	UStaticMeshComponent* HairComponent;
+
 	UPROPERTY()
 	UMaterialInstanceDynamic* FaceMaterialInstance;
+
+
 
 	
 };

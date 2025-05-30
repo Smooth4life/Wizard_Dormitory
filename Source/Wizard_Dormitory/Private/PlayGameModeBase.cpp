@@ -63,11 +63,13 @@ void APlayGameModeBase::SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector
 	if (!NPCClass)return;
 	FActorSpawnParameters Params;
 	ANPC* NPC = GetWorld()->SpawnActor<ANPC>(NPCClass, SpawnLocation, FRotator::ZeroRotator, Params);
+	/*
 	if (NPC)
 	{
 		FNPCVisualData Visual = ConvertSeedToVisual(Seed, NPCLibrary);
 		NPC->ApplyVisual(Visual);
 	}
+	*/
 }
 
 FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
@@ -82,6 +84,18 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 
 	if (NPCLibrary.MouthUVs.Num() > 0)
 		Seed.MouthIndex = FMath::RandRange(0, NPCLibrary.MouthUVs.Num() - 1);
+
+	if (NPCLibrary.AffiliationEffects.Num() > 0)
+		Seed.AffiliationEffectIndex = FMath::RandRange(0, NPCLibrary.AffiliationEffects.Num() - 1);
+
+	if (NameTable)
+	{
+		TArray<FName> RowNames = NameTable->GetRowNames();
+		if (RowNames.Num() > 0)
+		{
+			Seed.NameIndex = FMath::RandRange(0, RowNames.Num() - 1);
+		}
+	}
 
 	Seed.bIsNormal = FMath::RandBool();
 
@@ -131,6 +145,29 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 			});
 
 	}
+	// 나이아가라 이펙트 인덱스 변경
+	if (NPCLibrary.AffiliationEffects.Num() > 1)
+	{
+		Modifiers.Add([&]() {
+			do {
+				Modified.AffiliationEffectIndex = FMath::RandRange(0, NPCLibrary.AffiliationEffects.Num() - 1);
+			} while (Modified.AffiliationEffectIndex == Original.AffiliationEffectIndex);
+			});
+	}
+
+	// 이름 인덱스 변경
+	if (NameTable)
+	{
+		TArray<FName> RowNames = NameTable->GetRowNames();
+		if (RowNames.Num() > 1)
+		{
+			Modifiers.Add([&, RowNames]() {
+				do {
+					Modified.NameIndex = FMath::RandRange(0, RowNames.Num() - 1);
+				} while (Modified.NameIndex == Original.NameIndex);
+				});
+		}
+	}
 
 	// 무작위로 몇 개 항목을 변경할지 결정 (최소 1개 ~ 최대 전체)
 	int32 NumChanges = FMath::RandRange(1, Modifiers.Num());
@@ -163,20 +200,7 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	}
 
 	const FNPCSeedData& CurrentSeed = GeneratedSeeds[CurrentSeedIndex - 1];
-	/*
-	const bool bIsCorrect = (bAccepted == CurrentSeed.bIsNormal);
-
-	if (bIsCorrect)
-	{
-		++NumAccepted;
-		UE_LOG(LogTemp, Warning, TEXT("true"));
-	}
-	else
-	{
-		++NumRejected;
-		UE_LOG(LogTemp, Warning, TEXT("false"));
-	}
-	*/
+	
 	/////////////////////////
 	const bool bIsActuallyNormal = CurrentSeed.bIsNormal;
 
@@ -249,7 +273,7 @@ void APlayGameModeBase::ApplyNextSeed()
 	// 오리지널 NPC 적용
 	if (ReusableNPC)
 	{
-		FNPCVisualData Visual = ConvertSeedToVisual(OriginalSeed, NPCLibrary);
+		FNPCVisualData Visual = ConvertSeedToVisual(OriginalSeed, NPCLibrary, NameTable);
 		ReusableNPC->ApplyVisual(Visual);
 		// ReusableNPC->StartEntrance(); // 필요시 애니메이션 시작
 	}
@@ -262,9 +286,11 @@ void APlayGameModeBase::ApplyNextSeed()
 	if (GuestNPC)
 	{
 		FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
-		FNPCVisualData GuestVisual = ConvertSeedToVisual(GuestSeed, NPCLibrary);
+		FNPCVisualData GuestVisual = ConvertSeedToVisual(GuestSeed, NPCLibrary, NameTable);
 		GuestNPC->ApplyVisual(GuestVisual);
 		// GuestNPC->StartEntrance(); // 필요시 애니메이션 시작
+		// 필요 시 즉시 이펙트 표시 (테스트용 또는 자동 표시용)
+		// GuestNPC->ShowAffiliationEffect();
 	}
 	else
 	{
@@ -273,15 +299,8 @@ void APlayGameModeBase::ApplyNextSeed()
 
 	++CurrentSeedIndex;
 
-	//시드값 적용 확인용
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d | IsNormal=%s"),
-		OriginalSeed.HairIndex, OriginalSeed.EyeIndex, OriginalSeed.MouthIndex, OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
+	
+	// 시드값 적용 확인용
 
-	FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
-
-	UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d | IsNormal=%s"),
-		GuestSeed.HairIndex, GuestSeed.EyeIndex, GuestSeed.MouthIndex, GuestSeed.bIsNormal ? TEXT("true") : TEXT("false"));
-		*/
 
 }
