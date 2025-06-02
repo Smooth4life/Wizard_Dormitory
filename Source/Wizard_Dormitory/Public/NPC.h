@@ -78,6 +78,11 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FString NPCDisplayName;
 
+	UPROPERTY(BlueprintReadOnly)
+	int64 NPCDisplayID;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString NPCDisplayAffiliation;
 
 private:
 	UPROPERTY()

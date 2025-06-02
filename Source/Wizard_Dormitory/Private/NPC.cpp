@@ -66,8 +66,8 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 
 	CurrentVisualData = VisualData;
 	NPCDisplayName = VisualData.DisplayName;
-
-
+	NPCDisplayID = VisualData.StudentID;
+	NPCDisplayAffiliation = VisualData.AffiliationName;
 
 }
 

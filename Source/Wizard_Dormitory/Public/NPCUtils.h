@@ -50,5 +50,18 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
         }
     }
 
+    // StudentID와 AffiliationName 세팅
+    Result.StudentID = Seed.StudentID;
+
+    if (Library.AffiliationNames.IsValidIndex(Seed.AffiliationEffectIndex))
+    {
+        Result.AffiliationName = Library.AffiliationNames[Seed.AffiliationEffectIndex];
+    }
+    else
+    {
+        Result.AffiliationName = TEXT("미지정");
+    }
+   
+
     return Result;
 }

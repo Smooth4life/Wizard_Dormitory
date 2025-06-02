@@ -25,4 +25,8 @@ struct FNPCLibrary
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UNiagaraSystem*> AffiliationEffects;
 
+    // 추가: 소속 이름 리스트
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FString> AffiliationNames;
+
 };
