@@ -36,11 +36,11 @@ public:
     TArray<FNPCSeedData> GeneratedSeeds;
 
     // 재사용될 NPC (레벨에 배치)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
+    UPROPERTY()
     class ANPC* ReusableNPC;
     //TSubclassOf<ANPC> ReusableNPC;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC")
+    UPROPERTY()
     class ANPC* GuestNPC;
 
     // 통과시킨 인원수(정답만)

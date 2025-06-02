@@ -301,6 +301,37 @@ void APlayGameModeBase::ApplyNextSeed()
 
 	
 	// 시드값 적용 확인용
+	const FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
 
+	if (NameTable)
+	{
+		TArray<FName> RowNames = NameTable->GetRowNames();
+
+		const FNPCNameRow* OriginalNameRow = RowNames.IsValidIndex(OriginalSeed.NameIndex)
+			? NameTable->FindRow<FNPCNameRow>(RowNames[OriginalSeed.NameIndex], TEXT("LogOriginal"))
+			: nullptr;
+
+		const FNPCNameRow* GuestNameRow = RowNames.IsValidIndex(GuestSeed.NameIndex)
+			? NameTable->FindRow<FNPCNameRow>(RowNames[GuestSeed.NameIndex], TEXT("LogGuest"))
+			: nullptr;
+
+		UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | IsNormal=%s"),
+			OriginalSeed.HairIndex,
+			OriginalSeed.EyeIndex,
+			OriginalSeed.MouthIndex,
+			OriginalSeed.AffiliationEffectIndex,
+			OriginalSeed.NameIndex,
+			OriginalNameRow ? *OriginalNameRow->Name : TEXT("NULL"),
+			OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
+
+		UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | IsNormal=%s"),
+			GuestSeed.HairIndex,
+			GuestSeed.EyeIndex,
+			GuestSeed.MouthIndex,
+			GuestSeed.AffiliationEffectIndex,
+			GuestSeed.NameIndex,
+			GuestNameRow ? *GuestNameRow->Name : TEXT("NULL"),
+			GuestSeed.bIsNormal ? TEXT("true") : TEXT("false"));
+	}
 
 }
