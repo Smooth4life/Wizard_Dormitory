@@ -77,6 +77,8 @@ public:
 
     FNPCSeedData GenerateGuestSeedFromOriginal(const FNPCSeedData& Original, bool bIsNormal) const;
 
+    //학번 생성 함수
+    int64 GenerateStudentID(int32 AffiliationIndex) const;
 
     void AutoBindReusableNPC();
 

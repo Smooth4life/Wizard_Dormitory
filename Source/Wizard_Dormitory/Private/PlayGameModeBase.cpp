@@ -97,6 +97,8 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 		}
 	}
 
+	Seed.StudentID = GenerateStudentID(Seed.AffiliationEffectIndex);
+
 	Seed.bIsNormal = FMath::RandBool();
 
 	return Seed;
@@ -145,7 +147,7 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 			});
 
 	}
-	// 나이아가라 이펙트 인덱스 변경
+	// 나이아가라 이펙트 인덱스 변경(소속)
 	if (NPCLibrary.AffiliationEffects.Num() > 1)
 	{
 		Modifiers.Add([&]() {
@@ -183,11 +185,21 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 		Modifiers[i]();// 여기서 HairIndex, EyeIndex, MouthIndex 중 일부가 바뀜
 	}
 
+	Modified.StudentID = GenerateStudentID(Modified.AffiliationEffectIndex);
 	Modified.bIsNormal = false;
 	return Modified;
 }
 
 
+int64 APlayGameModeBase::GenerateStudentID(int32 AffiliationIndex) const
+{
+	const int32 Year = FDateTime::Now().GetYear(); // ex. 2025
+	const int32 RandomPart = FMath::RandRange(0, 9999); // 0000~9999
+
+	// 학번 구조: YYYYASSSS (예: 202530042)
+	// A: 소속, SSSS: 랜덤값
+	return Year * 100000 + AffiliationIndex * 10000 + RandomPart;
+}
 
 
 
@@ -237,6 +249,8 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	*/
 }
 
+
+
 void APlayGameModeBase::AutoBindReusableNPC()
 {
 	if (!ReusableNPC)
@@ -282,10 +296,12 @@ void APlayGameModeBase::ApplyNextSeed()
 		UE_LOG(LogTemp, Warning, TEXT("ReusableNPC is null"));
 	}
 
+	FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
+	
 	// 게스트 NPC 적용
 	if (GuestNPC)
 	{
-		FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
+		//FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
 		FNPCVisualData GuestVisual = ConvertSeedToVisual(GuestSeed, NPCLibrary, NameTable);
 		GuestNPC->ApplyVisual(GuestVisual);
 		// GuestNPC->StartEntrance(); // 필요시 애니메이션 시작
@@ -301,7 +317,7 @@ void APlayGameModeBase::ApplyNextSeed()
 
 	
 	// 시드값 적용 확인용
-	const FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
+	//const FNPCSeedData GuestSeed = GenerateGuestSeedFromOriginal(OriginalSeed, OriginalSeed.bIsNormal);
 
 	if (NameTable)
 	{
@@ -315,22 +331,24 @@ void APlayGameModeBase::ApplyNextSeed()
 			? NameTable->FindRow<FNPCNameRow>(RowNames[GuestSeed.NameIndex], TEXT("LogGuest"))
 			: nullptr;
 
-		UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | IsNormal=%s"),
+		UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
 			OriginalSeed.HairIndex,
 			OriginalSeed.EyeIndex,
 			OriginalSeed.MouthIndex,
 			OriginalSeed.AffiliationEffectIndex,
 			OriginalSeed.NameIndex,
 			OriginalNameRow ? *OriginalNameRow->Name : TEXT("NULL"),
+			OriginalSeed.StudentID,
 			OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
 
-		UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | IsNormal=%s"),
+		UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
 			GuestSeed.HairIndex,
 			GuestSeed.EyeIndex,
 			GuestSeed.MouthIndex,
 			GuestSeed.AffiliationEffectIndex,
 			GuestSeed.NameIndex,
 			GuestNameRow ? *GuestNameRow->Name : TEXT("NULL"),
+			GuestSeed.StudentID,
 			GuestSeed.bIsNormal ? TEXT("true") : TEXT("false"));
 	}
 
