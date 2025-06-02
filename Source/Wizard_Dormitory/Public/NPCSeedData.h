@@ -36,6 +36,10 @@ struct FNPCSeedData
     //이름 인덱스
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NameIndex = 0;
+    
+    //학번
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int64 StudentID;
 
 
     // 미래 확장 대비 (예: 피부색, 안경, 모자 등)
