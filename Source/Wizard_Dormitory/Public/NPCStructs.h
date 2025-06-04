@@ -1,9 +1,12 @@
 ﻿#pragma once
 
+
+#include "Sound/SoundBase.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "NiagaraSystem.h"
 #include "NPCStructs.generated.h"
+
 /**
  * 얼굴 요소 데이터 (눈/입 텍스처 좌표 정보)
  */
@@ -40,12 +43,7 @@ struct FNPCVisualData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DisplayName;
 
-    // 추가: 학번 (시드 기반 생성된 값)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 StudentID;
-
-    // 추가: 소속명 (예: "마법학과", "기술과")
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString AffiliationName;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    USoundBase* NameIdentify;
 
 };

@@ -131,6 +131,17 @@ void ANPC::HideAffiliationEffect()
 	}
 }
 
+void ANPC::NameIdentify()
+{
+	if (CurrentVisualData.NameIdentify)
+	{
+		UGameplayStatics::PlaySound2D(
+			this,
+			CurrentVisualData.NameIdentify
+		);
+	}
+}
+
 
 // Called every frame
 void ANPC::Tick(float DeltaTime)
