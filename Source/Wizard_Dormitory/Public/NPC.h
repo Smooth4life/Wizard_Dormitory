@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Affiliation")
 	void HideAffiliationEffect();
 
+	UFUNCTION(BlueprintCallable, Category = "NameIdentify")
+	void NameIdentify();
+
 
 protected:
 	// Called when the game starts or when spawned

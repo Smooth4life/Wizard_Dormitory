@@ -1,9 +1,12 @@
 ﻿#pragma once
 
+
+#include "Sound/SoundBase.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "NiagaraSystem.h"
 #include "NPCStructs.generated.h"
+
 /**
  * 얼굴 요소 데이터 (눈/입 텍스처 좌표 정보)
  */
@@ -39,5 +42,8 @@ struct FNPCVisualData
     // 실제로 사용할 NPC 이름
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DisplayName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    USoundBase* NameIdentify;
 
 };

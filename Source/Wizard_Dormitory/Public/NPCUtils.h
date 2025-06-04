@@ -6,7 +6,7 @@
 #include "NPCStructs.h"
 #include "NPCSeedData.h"
 #include "NPCLibrary.h"
-#include <NPCNameRow.h>
+#include "NPCNameRow.h"
 
 //시드와 에셋풀을 사용해 NPC의 외형 데이터를 생성하는 함수
 
@@ -42,10 +42,13 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
         TArray<FName> RowNames = NameTable->GetRowNames();
         if (RowNames.IsValidIndex(Seed.NameIndex))
         {
-            const FNPCNameRow* NameRow = NameTable->FindRow<FNPCNameRow>(RowNames[Seed.NameIndex], TEXT("GetName"));
+            FName RowKey = RowNames[Seed.NameIndex];
+
+            const FNPCNameRow* NameRow = NameTable->FindRow<FNPCNameRow>(RowKey, TEXT("GetName"));
             if (NameRow)
             {
                 Result.DisplayName = NameRow->Name;
+                Result.NameIdentify = NameRow->NameIdentify;
             }
         }
     }
