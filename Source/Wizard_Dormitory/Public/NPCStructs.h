@@ -43,6 +43,12 @@ struct FNPCVisualData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DisplayName;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int64 StudentID;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString AffiliationName;
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundBase* NameIdentify;
 
