@@ -31,10 +31,21 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
-	//동적 머터리얼생성
+	//0번 슬롯(피부) 머터리얼 인스턴스 (향후 피부색/질감 추가되면 사용)
 	UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
 	FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
 	GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
+
+	//눈 머터리얼
+	UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(1);
+	EyeMaterialInstance = UMaterialInstanceDynamic::Create(EyeBaseMat, this);
+	GetMesh()->SetMaterial(1, EyeMaterialInstance);
+
+	//입 머터리얼 나중에 메쉬에 추가되면 주석 없애기만 하면됨
+	/*UMaterialInterface* MouthBaseMat = GetMesh()->GetMaterial(2);
+	MouthMaterialInstance = UMaterialInstanceDynamic::Create(MouthBaseMat, this);
+	GetMesh()->SetMaterial(2, MouthMaterialInstance);*/
+
 
 }
 
@@ -58,10 +69,26 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 
 	//머터리얼 UV파라미터 적용
 	//벡터파라미터의 이름을 맞추면 바뀜
-	if (FaceMaterialInstance)
+	//if (FaceMaterialInstance)
+	//{
+	//	FaceMaterialInstance->SetVectorParameterValue("EyeUV", FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
+	//	FaceMaterialInstance->SetVectorParameterValue("MouthUV", FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
+	//	//UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
+
+	//}
+	if (EyeMaterialInstance)
 	{
-		FaceMaterialInstance->SetVectorParameterValue("EyeUV", FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
-		FaceMaterialInstance->SetVectorParameterValue("MouthUV", FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
+		EyeMaterialInstance->SetVectorParameterValue("EyeUV",
+			FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
+		UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
+		UE_LOG(LogTemp, Warning, TEXT("Slot 1 Material: %s"), *GetMesh()->GetMaterial(1)->GetName());
+
+	}
+
+	if (MouthMaterialInstance)
+	{
+		MouthMaterialInstance->SetVectorParameterValue("MouthUV",
+			FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
 	}
 
 	CurrentVisualData = VisualData;

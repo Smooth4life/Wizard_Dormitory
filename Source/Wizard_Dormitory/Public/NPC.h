@@ -87,6 +87,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FString NPCDisplayAffiliation;
 
+	UPROPERTY()
+	UMaterialInstanceDynamic* EyeMaterialInstance;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* MouthMaterialInstance;
+
+
 private:
 	UPROPERTY()
 	UStaticMeshComponent* HairComponent;
