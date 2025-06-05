@@ -120,20 +120,20 @@ void ARadioActor::UpdateVolume()
 	FRotator CurrentCtrlRot = GrabController->GetComponentRotation();
 
 	// (2) ΔYaw 계산: 얼마나 손목을 돌렸는지를 구함
-	float DeltaYaw = CurrentCtrlRot.Yaw - GrabStartCtrlRot.Yaw;
+	float DeltaRoll = CurrentCtrlRot.Roll - GrabStartCtrlRot.Roll;
 
 	// (3) 다이얼 로컬 Yaw 계산, 범위 제한 (Clamp)
-	float StartYaw = GrabStartDialRot.Yaw;
-	float NewDialYaw = StartYaw + DeltaYaw;
-	NewDialYaw = FMath::Clamp(NewDialYaw, MinDialAngle, MaxDialAngle);
+	float StartRoll = GrabStartDialRot.Roll;
+	float NewDialRoll = StartRoll + DeltaRoll;
+	NewDialRoll = FMath::Clamp(NewDialRoll, MinDialAngle, MaxDialAngle);
 
 	// (4) 실제 다이얼 메시를 회전
 	FRotator NewLocalRot = GrabbedDialComponent->GetRelativeRotation();
-	NewLocalRot.Yaw = NewDialYaw;
+	NewLocalRot.Roll = NewDialRoll;
 	GrabbedDialComponent->SetRelativeRotation(NewLocalRot);
 
 	// (5) 0~1로 정규화한 뒤, 0~2 범위로 재조정
-	float Normalized01 = (NewDialYaw - MinDialAngle) / (MaxDialAngle - MinDialAngle);
+	float Normalized01 = (NewDialRoll - MinDialAngle) / (MaxDialAngle - MinDialAngle);
 	Normalized01 = FMath::Clamp(Normalized01, 0.f, 1.f);
 
 	// 0~1 범위를 0~2로 확장: 0 → 0, 0.5 → 1, 1 → 2
