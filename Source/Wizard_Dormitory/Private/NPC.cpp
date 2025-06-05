@@ -80,8 +80,8 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 	{
 		EyeMaterialInstance->SetVectorParameterValue("EyeUV",
 			FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
-		UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
-		UE_LOG(LogTemp, Warning, TEXT("Slot 1 Material: %s"), *GetMesh()->GetMaterial(1)->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("Slot 1 Material: %s"), *GetMesh()->GetMaterial(1)->GetName());
 
 	}
 

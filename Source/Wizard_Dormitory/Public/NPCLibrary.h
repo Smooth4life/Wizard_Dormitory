@@ -15,10 +15,10 @@ struct FNPCLibrary
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> HairMeshes;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(Transient)
     TArray<FVector2D> EyeUVs;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(Transient)
     TArray<FVector2D> MouthUVs;
 
     // 소속 이펙트들

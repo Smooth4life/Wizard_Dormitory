@@ -9,6 +9,7 @@
 
 void APlayGameModeBase::BeginPlay()
 {
+	SetupUVPresets(); // UV 자동 생성
 	AutoBindReusableNPC();
 	// 시드 배열 생성 및 첫 NPC 적용
 	GenerateNPCSeeds();
@@ -275,6 +276,14 @@ void APlayGameModeBase::AutoBindReusableNPC()
 		UE_LOG(LogTemp, Error, TEXT("ReusableNPC was not found in level!"));
 		return;
 	}
+}
+
+void APlayGameModeBase::SetupUVPresets()
+{
+	NPCLibrary.EyeUVs = GenerateVerticalUVs(NumEyeFrames);
+	NPCLibrary.MouthUVs = GenerateVerticalUVs(NumMouthFrames);
+
+	UE_LOG(LogTemp, Warning, TEXT("EyeUVs = %d개, MouthUVs = %d개 자동 생성됨"), NumEyeFrames, NumMouthFrames);
 }
 
 void APlayGameModeBase::ApplyNextSeed()

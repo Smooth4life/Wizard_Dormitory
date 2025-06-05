@@ -71,7 +71,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	//피부 머터리얼
 	UPROPERTY(EditDefaultsOnly, Category = "NPC")
 	int32 FaceMaterialIndex = 0;
 
@@ -87,9 +87,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FString NPCDisplayAffiliation;
 
+	//눈, 입 머터리얼
 	UPROPERTY()
 	UMaterialInstanceDynamic* EyeMaterialInstance;
-
 	UPROPERTY()
 	UMaterialInstanceDynamic* MouthMaterialInstance;
 

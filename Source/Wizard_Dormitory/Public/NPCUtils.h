@@ -68,3 +68,19 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
 
     return Result;
 }
+
+// 배열 자동생성 함수 Y값 변경
+static TArray<FVector2D> GenerateVerticalUVs(int32 NumRows)
+{
+    TArray<FVector2D> Result;
+    if (NumRows <= 0) return Result;
+
+    const float Step = 1.0f / NumRows;
+
+    for (int32 i = 0; i < NumRows; ++i)
+    {
+        Result.Add(FVector2D(0.0f, i * Step));
+    }
+
+    return Result;
+}

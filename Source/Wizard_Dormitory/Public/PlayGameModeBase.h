@@ -56,6 +56,13 @@ public:
     //데이터 테이블 DataTable
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
     UDataTable* NameTable;
+    //눈 텍스쳐 갯수
+    UPROPERTY(EditAnywhere, Category = "NPC UV")
+    int32 NumEyeFrames = 4;
+
+    //입 텍스쳐 갯수
+    UPROPERTY(EditAnywhere, Category = "NPC UV")
+    int32 NumMouthFrames = 4;
 
 
 
@@ -82,8 +89,13 @@ public:
 
     void AutoBindReusableNPC();
 
+    //UV 생성 함수
+    void SetupUVPresets();
+
 
 
     // 테스트용 직접 스폰 (다수 생성용)
     void SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& Location);
+
+
 };
