@@ -18,11 +18,6 @@ ARadioActor::ARadioActor()
 	Body->SetupAttachment(RootComponent);
 	Body->SetCollisionProfileName(TEXT("BlockAll"));
 
-	// 2) Dial_Master 생성 및 루트에 부착
-	Dial_Master = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_Master"));
-	Dial_Master->SetupAttachment(Body);
-	Dial_Master->SetRelativeRotation(FRotator::ZeroRotator);
-	Dial_Master->SetCollisionProfileName(TEXT("BlockAll"));
 
 	// 3) Dial_BGM 생성
 	Dial_BGM = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_BGM"));
@@ -30,11 +25,6 @@ ARadioActor::ARadioActor()
 	Dial_BGM->SetRelativeRotation(FRotator::ZeroRotator);
 	Dial_BGM->SetCollisionProfileName(TEXT("BlockAll"));
 
-	// 4) Dial_SFX 생성
-	Dial_SFX = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_SFX"));
-	Dial_SFX->SetupAttachment(Body);
-	Dial_SFX->SetRelativeRotation(FRotator::ZeroRotator);
-	Dial_SFX->SetCollisionProfileName(TEXT("BlockAll"));
 
 	// 5) 기본값 초기화
 	bIsGrabbed = false;
@@ -45,9 +35,7 @@ ARadioActor::ARadioActor()
 
 	// 오디오 에셋은 에디터에서 연결
 	MySoundMix = nullptr;
-	MasterSoundClass = nullptr;
 	BGMSoundClass = nullptr;
-	SFXSoundClass = nullptr;
 
 }
 
@@ -141,17 +129,9 @@ void ARadioActor::UpdateVolume()
 
 	// (6) 어떤 다이얼인지 판단 → SoundClass 선택
 	USoundClass* TargetClass = nullptr;
-	if (GrabbedDialComponent == Dial_Master)
-	{
-		TargetClass = MasterSoundClass;
-	}
-	else if (GrabbedDialComponent == Dial_BGM)
+	if (GrabbedDialComponent == Dial_BGM)
 	{
 		TargetClass = BGMSoundClass;
-	}
-	else if (GrabbedDialComponent == Dial_SFX)
-	{
-		TargetClass = SFXSoundClass;
 	}
 
 	// (7) SoundMix를 통해 볼륨 적용

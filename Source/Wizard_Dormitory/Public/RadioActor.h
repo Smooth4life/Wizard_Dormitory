@@ -33,15 +33,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* Body;
-	// (2) 다이얼 메시 3개: Master, BGM, SFX 각각을 UStaticMeshComponent로 표현
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Dial_Master;
+	// (2) 다이얼 메시 1개: BGM UStaticMeshComponent로 표현
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* Dial_BGM;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Dial_SFX;
 
 	// === 변수 ===
 	// (3) 현재 Grab 상태인지 여부를 나타냅니다.
@@ -74,15 +70,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Audio")
 	USoundMix* MySoundMix;
 
-	// (10) Master/BGM/SFX에 대응하는 SoundClass 에셋들
-	UPROPERTY(EditAnywhere, Category = "Audio")
-	USoundClass* MasterSoundClass;
+	// (10) BGM에 대응하는 SoundClass 에셋들
 
 	UPROPERTY(EditAnywhere, Category = "Audio")
 	USoundClass* BGMSoundClass;
 
-	UPROPERTY(EditAnywhere, Category = "Audio")
-	USoundClass* SFXSoundClass;
 
 	// === 함수 ===
 	// (11) 다이얼을 잡는 순간(Pressed) VRPawn에서 호출하는 함수
