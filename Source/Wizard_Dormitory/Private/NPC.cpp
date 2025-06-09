@@ -7,6 +7,7 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include <NPCDialogueRow.h>
 
 // Sets default values
 ANPC::ANPC()
@@ -184,4 +185,44 @@ void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void ANPC::PlayRandomDialogue(UDataTable* DialogueTable)
+{
+	if (!DialogueTable) return;
+
+	const TArray<FName> RowNames = DialogueTable->GetRowNames();
+	if (RowNames.Num() == 0) return;
+
+	const FName Chosen = RowNames[FMath::RandRange(0, RowNames.Num() - 1)];
+	const FNPCDialogueRow* Row = DialogueTable->FindRow<FNPCDialogueRow>(Chosen, TEXT("RandomDialogue"));
+
+	if (Row)
+	{
+		UGameplayStatics::PlaySound2D(this, Row->Sound);
+		ShowSubtitle(Row->Subtitle);
+
+		GetWorldTimerManager().SetTimerForNextTick([this]()
+			{
+				FTimerHandle TimerHandle;
+				GetWorldTimerManager().SetTimer(TimerHandle, [this]() { HideSubtitle(); }, 2.0f, false);
+			});
+	}
+}
+
+void ANPC::PlayNameDialogue()
+{
+	if (!CurrentVisualData.DisplayName.IsEmpty() && CurrentVisualData.NameIdentify)
+	{
+		// 이름 자막 출력
+		ShowSubtitle(FText::FromString(CurrentVisualData.DisplayName));
+
+		// 사운드 재생
+		UGameplayStatics::PlaySound2D(this, CurrentVisualData.NameIdentify);
+
+		// 일정 시간 뒤 자막 제거
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle, [this]() { HideSubtitle(); }, 2.0f, false);
+	}
+}
+
 

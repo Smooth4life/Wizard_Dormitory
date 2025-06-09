@@ -92,6 +92,24 @@ public:
 	UMaterialInstanceDynamic* EyeMaterialInstance;
 	UPROPERTY()
 	UMaterialInstanceDynamic* MouthMaterialInstance;
+	
+	// 자막 관련 DataTable 참조
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Subtitle")
+	UDataTable* GreetingDialogueTable;
+
+	UFUNCTION(BlueprintCallable, Category = "Subtitle")
+	void PlayRandomDialogue(UDataTable* DialogueTable);
+
+	// 자막 출력 - 블루프린트에서 구현
+	UFUNCTION(BlueprintImplementableEvent, Category = "Subtitle")
+	void ShowSubtitle(const FText& Text);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Subtitle")
+	void HideSubtitle();
+
+	//이름
+	UFUNCTION(BlueprintCallable, Category = "Subtitle")
+	void PlayNameDialogue();
 
 
 private:
