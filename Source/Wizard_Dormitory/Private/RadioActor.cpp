@@ -1,151 +1,142 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+// RadioActor.cpp
 #include "RadioActor.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 ARadioActor::ARadioActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
-	// 1) 루트 컴포넌트 생성
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
+    Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    RootComponent = Root;
 
-	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
-	Body->SetupAttachment(RootComponent);
-	Body->SetCollisionProfileName(TEXT("BlockAll"));
+    Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
+    Body->SetupAttachment(RootComponent);
+    Body->SetCollisionProfileName(TEXT("BlockAll"));
 
+    Dummy = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy"));
+    Dummy->SetupAttachment(Body);
+    Dummy->SetRelativeRotation(FRotator::ZeroRotator);
 
-	// 3) Dial_BGM 생성
-	Dial_BGM = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_BGM"));
-	Dial_BGM->SetupAttachment(Body);
-	Dial_BGM->SetRelativeRotation(FRotator::ZeroRotator);
-	Dial_BGM->SetCollisionProfileName(TEXT("BlockAll"));
+    Dial_BGM = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_BGM"));
+    Dial_BGM->SetupAttachment(Dummy);
+    Dial_BGM->SetCollisionProfileName(TEXT("BlockAll"));
 
+    bIsGrabbed = false;
+    HeldHandMesh = nullptr;
+    MinDialAngle = -60.f;
+    MaxDialAngle = 60.f;
 
-	// 5) 기본값 초기화
-	bIsGrabbed = false;
-	GrabController = nullptr;
-	GrabbedDialComponent = nullptr;
-	MinDialAngle = -60.f;
-	MaxDialAngle = 60.f;
-
-	// 오디오 에셋은 에디터에서 연결
-	MySoundMix = nullptr;
-	BGMSoundClass = nullptr;
-
+    MySoundMix = nullptr;
+    BGMSoundClass = nullptr;
 }
 
-// Called when the game starts or when spawned
 void ARadioActor::BeginPlay()
 {
-	Super::BeginPlay();
-
-	
+    Super::BeginPlay();
 }
-	
 
-// Called every frame
 void ARadioActor::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
-	// Grab 상태일 때만 매 Tick마다 볼륨 업데이트
-	if (bIsGrabbed && GrabController && GrabbedDialComponent)
-	{
-		UpdateVolume();
-	}
-
+    if (bIsGrabbed && HeldHandMesh)
+    {
+        UpdateVolume();
+    }
 }
 
-void ARadioActor::StartGrab(UMotionControllerComponent* Controller, UStaticMeshComponent* DialComponent)
+void ARadioActor::StartGrab(USkeletalMeshComponent* HandMesh)
 {
-	// (1) 이미 Grab 중이거나 입력이 잘못되었으면 무시
-	if (bIsGrabbed || !Controller || !DialComponent)
-	{
-		return;
-	}
+    if (bIsGrabbed || HeldHandMesh) return;
 
-	// (2) Grab 상태로 전환, 변수에 저장
-	bIsGrabbed = true;
-	GrabController = Controller;
-	GrabbedDialComponent = DialComponent;
+    bIsGrabbed = true;
+    HeldHandMesh = HandMesh;
 
-	// (3) Grab 시작 시점 회전값 저장
-	GrabStartCtrlRot = Controller->GetComponentRotation();
-	GrabStartDialRot = DialComponent->GetRelativeRotation();
-
-	// (4) 손 메시 Attach/Detach는 블루프린트(VRPawn)에서 처리
+    InitialHandRotation = HeldHandMesh->GetComponentTransform().GetRotation();
+    GrabStartDialRot = Dummy->GetRelativeRotation();
 }
 
 void ARadioActor::EndGrab()
 {
-	// (1) Grab 중이 아니면 무시
-	if (!bIsGrabbed)
-	{
-		return;
-	}
+    if (!bIsGrabbed) return;
 
-	// (2) Grab 해제, 변수 초기화
-	bIsGrabbed = false;
-	GrabController = nullptr;
-	GrabbedDialComponent = nullptr;
-
-	// (3) 손 메시 Attach/Detach는 블루프린트(VRPawn)에서 처리
+    bIsGrabbed = false;
+    HeldHandMesh = nullptr;
 }
 
 void ARadioActor::UpdateVolume()
 {
-	if (!GrabController || !GrabbedDialComponent)
-	{
-		return;
-	}
+    // 1) 현재 손 회전, Δ 계산
+    FQuat CurrentHandRotation = HeldHandMesh->GetComponentTransform().GetRotation();
+    FQuat DeltaQuat = InitialHandRotation.Inverse() * CurrentHandRotation;
 
-	// (1) 현재 컨트롤러 회전값
-	FRotator CurrentCtrlRot = GrabController->GetComponentRotation();
+    // 2) Twist 축 (손 메시의 로컬 Y축)
+    FVector TwistAxis = HeldHandMesh->GetComponentTransform().GetUnitAxis(EAxis::Y);
 
-	// (2) ΔYaw 계산: 얼마나 손목을 돌렸는지를 구함
-	float DeltaRoll = CurrentCtrlRot.Roll - GrabStartCtrlRot.Roll;
+    // 3) (기존처럼) 부호 있는 각도 구한 뒤, 음수 처리로 방향 반전
+    float TwistAngle = -GetSignedTwistAngle(DeltaQuat, TwistAxis);
 
-	// (3) 다이얼 로컬 Yaw 계산, 범위 제한 (Clamp)
-	float StartRoll = GrabStartDialRot.Roll;
-	float NewDialRoll = StartRoll + DeltaRoll;
-	NewDialRoll = FMath::Clamp(NewDialRoll, MinDialAngle, MaxDialAngle);
+    // 4) 누적 회전값 계산 & 클램프
+    float NewDialPitch = GrabStartDialRot.Pitch + TwistAngle;
+    NewDialPitch = FMath::Clamp(NewDialPitch, MinDialAngle, MaxDialAngle);
 
-	// (4) 실제 다이얼 메시를 회전
-	FRotator NewLocalRot = GrabbedDialComponent->GetRelativeRotation();
-	NewLocalRot.Roll = NewDialRoll;
-	GrabbedDialComponent->SetRelativeRotation(NewLocalRot);
+    // 5) Dummy 회전에 적용
+    FRotator NewRot = Dummy->GetRelativeRotation();
+    NewRot.Pitch = NewDialPitch;
+    Dummy->SetRelativeRotation(NewRot);
 
-	// (5) 0~1로 정규화한 뒤, 0~2 범위로 재조정
-	float Normalized01 = (NewDialRoll - MinDialAngle) / (MaxDialAngle - MinDialAngle);
-	Normalized01 = FMath::Clamp(Normalized01, 0.f, 1.f);
+    // 6) **항상** 기준 리베이스 (매 틱마다)
+    InitialHandRotation = CurrentHandRotation;
+    GrabStartDialRot = NewRot;
 
-	// 0~1 범위를 0~2로 확장: 0 → 0, 0.5 → 1, 1 → 2
-	float NewVolume = Normalized01 * 2.f;
+    // 7) [Min,Max]→[2,0] 으로 매핑 (볼륨 반전)
+    float NewVolume = FMath::GetMappedRangeValueClamped(
+        FVector2D(MinDialAngle, MaxDialAngle),
+        FVector2D(2.0f, 0.001f),
+        NewDialPitch
+    );
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%f"), NewVolume));
+    // 8) SoundMix 적용
+    UGameplayStatics::SetSoundMixClassOverride(
+        this,
+        MySoundMix,
+        BGMSoundClass,
+        NewVolume,
+        1.f,
+        0.f,
+        true
+    );
+    UGameplayStatics::PushSoundMixModifier(this, MySoundMix);
+}
 
-	// (6) 어떤 다이얼인지 판단 → SoundClass 선택
-	USoundClass* TargetClass = nullptr;
-	if (GrabbedDialComponent == Dial_BGM)
-	{
-		TargetClass = BGMSoundClass;
-	}
 
-	// (7) SoundMix를 통해 볼륨 적용
-	if (TargetClass && MySoundMix)
-	{
-		UGameplayStatics::SetSoundMixClassOverride(
-			this,
-			MySoundMix,
-			TargetClass,
-			NewVolume,   // 0~2 범위로 설정된 값
-			1.f,
-			0.f,
-			true
-		);
-		UGameplayStatics::PushSoundMixModifier(this, MySoundMix);
-	}
+FQuat ARadioActor::GetTwistQuat(const FQuat& RotationDelta, const FVector& TwistAxis)
+{
+    FVector Axis = TwistAxis.GetSafeNormal();
+    FVector DeltaV = FVector(RotationDelta.X, RotationDelta.Y, RotationDelta.Z);
+    FVector Project = FVector::DotProduct(DeltaV, Axis) * Axis;
+    FQuat   TwistQ = FQuat(Project.X, Project.Y, Project.Z, RotationDelta.W);
+    return TwistQ.GetNormalized();
+}
+
+float ARadioActor::GetTwistAngleDegrees(const FQuat& RotationDelta, const FVector& TwistAxis)
+{
+    FQuat Twist = GetTwistQuat(RotationDelta, TwistAxis);
+    float AngleRad = 2.f * FMath::Acos(FMath::Clamp(Twist.W, -1.f, 1.f));
+    return FMath::RadiansToDegrees(AngleRad);
+}
+
+float ARadioActor::GetSignedTwistAngle(const FQuat& RotationDelta, const FVector& TwistAxis)
+{
+    // RotationDelta를 축+각도로 분해
+    FVector Axis;
+    float   AngleRad;
+    RotationDelta.ToAxisAndAngle(Axis, AngleRad);
+
+    // 라디안을 도(°)로 변환
+    float AngleDeg = FMath::RadiansToDegrees(AngleRad);
+
+    // 회전 축과 Axis 내적으로 부호 결정
+    float Sign = (FVector::DotProduct(Axis, TwistAxis) >= 0.f) ? 1.f : -1.f;
+    return AngleDeg * Sign;
 }

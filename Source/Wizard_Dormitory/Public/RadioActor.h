@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// RadioActor.h
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,7 +7,6 @@
 #include "GameFramework/Actor.h"
 #include "Sound/SoundMix.h"
 #include "Sound/SoundClass.h"
-#include "MotionControllerComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "RadioActor.generated.h"
@@ -14,79 +14,74 @@
 UCLASS()
 class WIZARD_DORMITORY_API ARadioActor : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ARadioActor();
+    GENERATED_BODY()
+
+public:
+    // Sets default values for this actor's properties
+    ARadioActor();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USceneComponent* Root;
+    /** Components **/
+    UPROPERTY(VisibleAnywhere, Category = "Components")
+    USceneComponent* Root;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Body;
-	// (2) 다이얼 메시 1개: BGM UStaticMeshComponent로 표현
+    UPROPERTY(VisibleAnywhere, Category = "Components")
+    UStaticMeshComponent* Body;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Dial_BGM;
+    UPROPERTY(VisibleAnywhere, Category = "Components")
+    USceneComponent* Dummy;
 
+    UPROPERTY(VisibleAnywhere, Category = "Components")
+    UStaticMeshComponent* Dial_BGM;
 
-	// === 변수 ===
-	// (3) 현재 Grab 상태인지 여부를 나타냅니다.
-	bool bIsGrabbed;
+    /** Grab 상태 **/
+    bool bIsGrabbed;
 
-	// (4) 어떤 모션 컨트롤러(왼손/오른손)가 다이얼을 잡았는지 저장
-	UPROPERTY()
-	UMotionControllerComponent* GrabController;
+    UPROPERTY()
+    USkeletalMeshComponent* HeldHandMesh;
 
-	// (5) Grab 시작 시점의 컨트롤러 월드 회전값
-	FRotator GrabStartCtrlRot;
+    /** Dial 회전 범위 **/
+    UPROPERTY(EditAnywhere, Category = "Dial")
+    float MinDialAngle;
 
-	// (6) Grab 시작 시점의 다이얼 로컬 회전값
-	FRotator GrabStartDialRot;
+    UPROPERTY(EditAnywhere, Category = "Dial")
+    float MaxDialAngle;
 
-	// (7) 현재 Grab 중인 다이얼 컴포넌트(StaticMeshComponent)의 포인터
-	UPROPERTY()
-	UStaticMeshComponent* GrabbedDialComponent;
+    /** Audio assets **/
+    UPROPERTY(EditAnywhere, Category = "Audio")
+    USoundMix* MySoundMix;
 
-	// === 다이얼 회전 범위 ===
-	// (8) 다이얼이 돌아갈 수 있는 최소/최대 로컬 Yaw 각도
-	UPROPERTY(EditAnywhere, Category = "Dial")
-	float MinDialAngle;
+    UPROPERTY(EditAnywhere, Category = "Audio")
+    USoundClass* BGMSoundClass;
 
-	UPROPERTY(EditAnywhere, Category = "Dial")
-	float MaxDialAngle;
+    /** Blueprint 호출 함수 **/
+    UFUNCTION(BlueprintCallable, Category = "Radio")
+    void StartGrab(USkeletalMeshComponent* HandMesh);
 
-	// === 오디오 조절용 에셋 ===
-	// (9) SoundMix 에셋: 음량(Volume) 조절을 위해 사용
-	UPROPERTY(EditAnywhere, Category = "Audio")
-	USoundMix* MySoundMix;
+    UFUNCTION(BlueprintCallable, Category = "Radio")
+    void EndGrab();
 
-	// (10) BGM에 대응하는 SoundClass 에셋들
-
-	UPROPERTY(EditAnywhere, Category = "Audio")
-	USoundClass* BGMSoundClass;
-
-
-	// === 함수 ===
-	// (11) 다이얼을 잡는 순간(Pressed) VRPawn에서 호출하는 함수
-	UFUNCTION(BlueprintCallable, Category = "Radio")
-	void StartGrab(UMotionControllerComponent* Controller, UStaticMeshComponent* DialComponent);
-
-	// (12) 다이얼을 놓는 순간(Released) VRPawn에서 호출하는 함수
-	UFUNCTION(BlueprintCallable, Category = "Radio")
-	void EndGrab();
+    /** Grab 시작 시 저장할 회전 상태 **/
+    FQuat InitialHandRotation;
+    FRotator GrabStartDialRot;
 
 private:
-	// (13) Grab 중일 때 매 Tick마다 볼륨을 갱신하는 내부 함수
-	void UpdateVolume();
+    // 매 Tick마다 볼륨 및 Dial 회전 업데이트
+    void UpdateVolume();
 
+    // RotationDelta 쿼터니온에서 Twist 축 성분만 추출
+    static FQuat GetTwistQuat(const FQuat& RotationDelta, const FVector& TwistAxis);
+
+    // Twist 쿼터니온으로부터 절대값 각도(°) 계산
+    static float GetTwistAngleDegrees(const FQuat& RotationDelta, const FVector& TwistAxis);
+
+    // Twist 쿼터니온으로부터 축 방향에 따른 부호 있는 각도(°) 계산
+    static float GetSignedTwistAngle(const FQuat& RotationDelta, const FVector& TwistAxis);
 };
