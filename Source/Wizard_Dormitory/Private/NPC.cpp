@@ -209,20 +209,21 @@ void ANPC::PlayRandomDialogue(UDataTable* DialogueTable)
 	}
 }
 
-void ANPC::PlayNameDialogue()
+void ANPC::PlayNameDialogue(UDataTable* NameLineTable)
 {
-	if (!CurrentVisualData.DisplayName.IsEmpty() && CurrentVisualData.NameIdentify)
-	{
-		// 이름 자막 출력
-		ShowSubtitle(FText::FromString(CurrentVisualData.DisplayName));
+	//if (!NameLineTable || !CurrentVisualData.NameIdentify || CurrentVisualData.DisplayName.IsEmpty())
+	//	return;
 
-		// 사운드 재생
-		UGameplayStatics::PlaySound2D(this, CurrentVisualData.NameIdentify);
+	//const FName RowKey = FName(*CurrentVisualData.DisplayName);
 
-		// 일정 시간 뒤 자막 제거
-		FTimerHandle TimerHandle;
-		GetWorldTimerManager().SetTimer(TimerHandle, [this]() { HideSubtitle(); }, 2.0f, false);
-	}
+	//const FNPCDialogueRow* Row = NameLineTable->FindRow<FNPCDialogueRow>(RowKey, TEXT("PlayNameDialogue"));
+	//if (!Row)
+	//	return;
+
+	//UGameplayStatics::PlaySound2D(this, CurrentVisualData.NameIdentify);
+	//ShowSubtitle(Row->Subtitle);
+
+
 }
 
 

@@ -109,7 +109,7 @@ public:
 
 	//이름
 	UFUNCTION(BlueprintCallable, Category = "Subtitle")
-	void PlayNameDialogue();
+	void PlayNameDialogue(UDataTable* NameLineTable);
 
 
 private:

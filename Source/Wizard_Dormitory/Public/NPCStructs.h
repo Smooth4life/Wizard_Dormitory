@@ -29,13 +29,13 @@ USTRUCT(BlueprintType)
 struct FNPCVisualData
 {
     GENERATED_BODY()
-
+    //헤어메쉬
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UStaticMesh* HairMesh;
-
+    //얼굴좌표값
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FNPCFaceData FaceData;
-
+    //소속나이아가라
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UNiagaraSystem* AffiliationEffect = nullptr;
 
@@ -43,9 +43,11 @@ struct FNPCVisualData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DisplayName;
 
+    //학번
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int64 StudentID;
 
+    //소속 이름
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AffiliationName;
 
