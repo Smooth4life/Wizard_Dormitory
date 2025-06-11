@@ -54,4 +54,8 @@ struct FNPCVisualData
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundBase* NameIdentify;
 
+    //이름 인덱스
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 NameIndex;
+
 };

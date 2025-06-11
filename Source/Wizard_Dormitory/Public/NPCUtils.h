@@ -37,6 +37,8 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
         Result.AffiliationEffect = Library.AffiliationEffects[Seed.AffiliationEffectIndex];
     }
 
+    Result.NameIndex = Seed.NameIndex;
+
     if (NameTable)
     {
         TArray<FName> RowNames = NameTable->GetRowNames();

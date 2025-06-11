@@ -92,6 +92,9 @@ public:
 	UMaterialInstanceDynamic* EyeMaterialInstance;
 	UPROPERTY()
 	UMaterialInstanceDynamic* MouthMaterialInstance;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 NPCNameIndex;
 	
 	// 자막 관련 DataTable 참조
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Subtitle")
@@ -110,6 +113,8 @@ public:
 	//이름
 	UFUNCTION(BlueprintCallable, Category = "Subtitle")
 	void PlayNameDialogue(UDataTable* NameLineTable);
+
+
 
 
 private:

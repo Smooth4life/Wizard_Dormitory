@@ -96,6 +96,7 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 	NPCDisplayName = VisualData.DisplayName;
 	NPCDisplayID = LexToString(VisualData.StudentID);
 	NPCDisplayAffiliation = VisualData.AffiliationName;
+	NPCNameIndex = VisualData.NameIndex;
 
 }
 
@@ -211,19 +212,22 @@ void ANPC::PlayRandomDialogue(UDataTable* DialogueTable)
 
 void ANPC::PlayNameDialogue(UDataTable* NameLineTable)
 {
-	//if (!NameLineTable || !CurrentVisualData.NameIdentify || CurrentVisualData.DisplayName.IsEmpty())
-	//	return;
+	if (!NameLineTable || NPCNameIndex < 0)
+		return;
 
-	//const FName RowKey = FName(*CurrentVisualData.DisplayName);
+	const TArray<FName> RowNames = NameLineTable->GetRowNames();
 
-	//const FNPCDialogueRow* Row = NameLineTable->FindRow<FNPCDialogueRow>(RowKey, TEXT("PlayNameDialogue"));
-	//if (!Row)
-	//	return;
+	if (!RowNames.IsValidIndex(NPCNameIndex))
+		return;
 
-	//UGameplayStatics::PlaySound2D(this, CurrentVisualData.NameIdentify);
-	//ShowSubtitle(Row->Subtitle);
+	const FName RowKey = RowNames[NPCNameIndex];
+	const FNPCDialogueRow* Row = NameLineTable->FindRow<FNPCDialogueRow>(RowKey, TEXT("PlayNameDialogue"));
 
+	if (!Row)
+		return;
 
+	UGameplayStatics::PlaySound2D(this, CurrentVisualData.NameIdentify);
+	ShowSubtitle(Row->Subtitle);
 }
 
 
