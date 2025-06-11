@@ -67,12 +67,6 @@ void AWeatherManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 
         CurrentCategory = MapWeatherMainToCategory(Main);
         OnWeatherUpdated.Broadcast(CurrentCategory);
-
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green,
-                FString::Printf(TEXT("날씨: %s → 카테고리 %d"), *Main, (int32)CurrentCategory));
-        }
     }
 }
 
