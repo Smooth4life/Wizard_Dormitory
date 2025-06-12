@@ -92,7 +92,7 @@ void ARadioActor::UpdateVolume()
     // 7) [Min,Max]→[2,0] 으로 매핑 (볼륨 반전)
     float NewVolume = FMath::GetMappedRangeValueClamped(
         FVector2D(MinDialAngle, MaxDialAngle),
-        FVector2D(2.0f, 0.001f),
+        FVector2D(2.0f, 0.0f),
         NewDialPitch
     );
     GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%f"), NewVolume));
