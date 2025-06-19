@@ -149,6 +149,12 @@ void ANPC::ShowAffiliationEffect(UNiagaraSystem* Effect)
 		EAttachLocation::SnapToTargetIncludingScale,
 		true
 	);
+
+	if (AffiliationEffectComponent)
+	{
+		AffiliationEffectComponent->SetWorldScale3D(FVector(0.2f)); // 크기 조절
+	}
+
 }
 
 void ANPC::HideAffiliationEffect()
