@@ -20,13 +20,17 @@ void APlayGameModeBase::BeginPlay()
 	const UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (!GI) return;
 
-	NumNPCToGenerate = GI->NPCCount;
+	int32 NPCCount = GI->GetNPCCountForCurrentDay();
 
-	if (NumNPCToGenerate <= 0)
+	if (NPCCount <= 0)
 	{
-		UE_LOG(LogTemp, Log, TEXT("NPCCount가 0이므로 StartGame 생략"));
+		UE_LOG(LogTemp, Warning, TEXT("Day %d의 NPC 수가 0이라 게임 시작 생략"), GI->CurrentDay);
 		return;
 	}
+
+	NumNPCToGenerate = NPCCount;
+
+	UE_LOG(LogTemp, Log, TEXT("[%d일차] NPC %d명 생성 시작"), GI->CurrentDay, NPCCount);
 
 	StartGame();
 }

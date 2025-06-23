@@ -3,3 +3,8 @@
 
 #include "MyGameInstance.h"
 
+int32 UMyGameInstance::GetNPCCountForCurrentDay() const
+{
+    const int32* Found = DayToNPCCount.Find(CurrentDay);
+    return Found ? *Found : 0;
+}
