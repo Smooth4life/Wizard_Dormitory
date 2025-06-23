@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -10,15 +10,15 @@ struct FNPCDialogueRow : public FTableRowBase
 {
     GENERATED_BODY()
 
-    // ÀÚ¸· ÅØ½ºÆ®
+    // ìë§‰ í…ìŠ¤íŠ¸
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText Subtitle;
 
-    // ´ëÀÀµÇ´Â »ç¿îµå
+    // ëŒ€ì‘ë˜ëŠ” ì‚¬ìš´ë“œ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     USoundBase* Sound;
 
-    // ¼±ÅÃ ºĞ±â¿ë ÅÂ±× (Áö±İÀº »ç¿ë¾ÈÇÔ)
+    // ì„ íƒ ë¶„ê¸°ìš© íƒœê·¸ (ì§€ê¸ˆì€ ì‚¬ìš©ì•ˆí•¨)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FName StyleTag;
 };
