@@ -6,15 +6,29 @@
 #include "NPCUtils.h"
 #include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
+#include "MyGameInstance.h"
 
 void APlayGameModeBase::BeginPlay()
 {
+	/*//StartGame으로 이동
 	SetupUVPresets(); // UV 자동 생성
 	AutoBindReusableNPC();
 	// 시드 배열 생성 및 첫 NPC 적용
 	GenerateNPCSeeds();
 	ApplyNextSeed();
-	
+	*/
+	const UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (!GI) return;
+
+	NumNPCToGenerate = GI->NPCCount;
+
+	if (NumNPCToGenerate <= 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("NPCCount가 0이므로 StartGame 생략"));
+		return;
+	}
+
+	StartGame();
 }
 
 void APlayGameModeBase::GenerateNPCSeeds()
@@ -284,6 +298,14 @@ void APlayGameModeBase::SetupUVPresets()
 	NPCLibrary.MouthUVs = GenerateVerticalUVs(NumMouthFrames);
 
 	UE_LOG(LogTemp, Warning, TEXT("EyeUVs = %d개, MouthUVs = %d개 자동 생성됨"), NumEyeFrames, NumMouthFrames);
+}
+
+void APlayGameModeBase::StartGame()
+{
+	SetupUVPresets();
+	AutoBindReusableNPC();
+	GenerateNPCSeeds();
+	ApplyNextSeed();
 }
 
 void APlayGameModeBase::ApplyNextSeed()
