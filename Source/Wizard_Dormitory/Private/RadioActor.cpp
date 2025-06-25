@@ -14,11 +14,13 @@ ARadioActor::ARadioActor()
     Body->SetCollisionProfileName(TEXT("BlockAll"));
 
     Dummy = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy"));
-    Dummy->SetupAttachment(Body);
+    Dummy->SetupAttachment(RootComponent);
+    Dummy->SetRelativeLocation(FVector(26.5f, 80.0f, 25.0f));
     Dummy->SetRelativeRotation(FRotator::ZeroRotator);
 
     Dial_BGM = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dial_BGM"));
     Dial_BGM->SetupAttachment(Dummy);
+    Dial_BGM->SetRelativeLocation(FVector(4.2f, -80.0f, -24.0f));
     Dial_BGM->SetCollisionProfileName(TEXT("BlockAll"));
 
     bIsGrabbed = false;
