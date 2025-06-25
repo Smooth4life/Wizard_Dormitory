@@ -61,8 +61,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
-	class UNiagaraComponent* AffiliationEffectComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Affiliation")
+	UNiagaraComponent* AffiliationEffectComponent = nullptr;
 
 public:	
 	// Called every frame

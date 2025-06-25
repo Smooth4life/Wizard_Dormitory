@@ -130,15 +130,18 @@ void ANPC::HandleNPCDecision(bool bAccepted)
 
 void ANPC::ShowAffiliationEffect(UNiagaraSystem* Effect)
 {
-	if (!CurrentVisualData.AffiliationEffect) return;
-
+	if (!CurrentVisualData.AffiliationEffect)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("AAAAAAAAAAAAAAA"));
+		return;
+	}
 	// 이미 붙어 있으면 제거
 	if (AffiliationEffectComponent)
 	{
 		AffiliationEffectComponent->DestroyComponent();
 		AffiliationEffectComponent = nullptr;
 	}
-
+	
 	// 손 소켓에 부착
 	AffiliationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
 		CurrentVisualData.AffiliationEffect,
@@ -149,11 +152,12 @@ void ANPC::ShowAffiliationEffect(UNiagaraSystem* Effect)
 		EAttachLocation::SnapToTargetIncludingScale,
 		true
 	);
-
+	/*
 	if (AffiliationEffectComponent)
 	{
 		AffiliationEffectComponent->SetWorldScale3D(FVector(0.2f)); // 크기 조절
 	}
+	*/
 
 }
 
