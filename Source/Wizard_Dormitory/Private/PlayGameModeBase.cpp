@@ -251,6 +251,12 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 		++NumRejected;
 		UE_LOG(LogTemp, Warning, TEXT("정상 NPC를 불통과시켰습니다! (오답)"));
 	}
+
+	if (NumNPCToGenerate == CurrentSeedIndex)
+	{
+		EndGame();
+	}
+
 	/*
 	else if (!bAccepted && !bIsActuallyNormal)
 	{
