@@ -254,6 +254,7 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 
 	if (NumNPCToGenerate == CurrentSeedIndex)
 	{
+		bGameEnd = true;
 		EndGame();
 	}
 
