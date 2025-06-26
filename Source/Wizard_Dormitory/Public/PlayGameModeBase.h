@@ -28,7 +28,7 @@ public:
     FNPCLibrary NPCLibrary;
 
     // 생성할 NPC 수 (블루프린트에서 조절 가능)
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumNPCToGenerate = 0;
 
     // 생성된 시드 배열
@@ -93,8 +93,11 @@ public:
     void SetupUVPresets();
 
     //게임시작
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Event")
     void StartGame();
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+    void EndGame();
 
 
 
