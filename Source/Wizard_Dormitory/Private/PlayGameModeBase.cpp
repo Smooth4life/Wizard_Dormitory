@@ -243,7 +243,7 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	}
 	else if (bAccepted && !bIsActuallyNormal)
 	{
-		++NumRejected;
+		++NumFake;
 		UE_LOG(LogTemp, Warning, TEXT("비정상 NPC를 통과시켰습니다! (오답)"));
 	}
 	else if (!bAccepted && bIsActuallyNormal)

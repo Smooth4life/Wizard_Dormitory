@@ -46,7 +46,10 @@ public:
     // 통과시킨 인원수(정답만)
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumAccepted = 0;
-    //오답횟수
+    // 오답횟수 비정상 통과
+    UPROPERTY(BlueprintReadOnly, Category = "NPC")
+    int32 NumFake = 0;
+    // 오답 횟수 정상 불통과
     UPROPERTY(BlueprintReadOnly, Category = "NPC")
     int32 NumRejected = 0;
 
