@@ -65,6 +65,8 @@ public:
     int32 NumMouthFrames = 4;
 
 
+    UPROPERTY(BlueprintReadWrite, Category = "NPC")
+    bool bGameEnd = false;
 
     // 판단 결과에 따라 처리 (통과/불통과)
     UFUNCTION(BlueprintCallable, Category = "NPC")
