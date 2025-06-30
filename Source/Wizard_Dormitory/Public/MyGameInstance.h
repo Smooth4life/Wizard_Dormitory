@@ -17,7 +17,7 @@ class WIZARD_DORMITORY_API UMyGameInstance : public UGameInstance
 public:
     // 현재 일차 (게임 진척도)
     UPROPERTY(BlueprintReadWrite, Category = "Stage")
-    int32 CurrentDay = 0;
+    int32 CurrentDay = 1;
 
     // 일차별 NPC 수 (블루프린트에서 설정 가능)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
