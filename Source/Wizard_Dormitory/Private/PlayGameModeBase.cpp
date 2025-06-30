@@ -252,6 +252,12 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 		UE_LOG(LogTemp, Warning, TEXT("정상 NPC를 불통과시켰습니다! (오답)"));
 	}
 
+	if ((NumFake + NumRejected) > NumNPCToGenerate * 0.5f)
+	{
+		UGameplayStatics::OpenLevel(this, FName("M_GameOver"));
+
+	}
+
 	if (NumNPCToGenerate == CurrentSeedIndex)
 	{
 		bGameEnd = true;
