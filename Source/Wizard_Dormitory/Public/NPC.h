@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "NPCStructs.h"
+#include "Sound/SoundBase.h"
+#include "TimerManager.h"
 #include "NPC.generated.h"
 
 UCLASS()
@@ -122,6 +124,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Subtitle")
 	void PlayStudentIDDialogue();
 
+	// 숫자 0~9에 대응하는 사운드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StudentID|Sound")
+	TArray<USoundBase*> DigitSounds;
+
+	// “입니다” 사운드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StudentID|Sound")
+	USoundBase* IDEndingSound;
 
 
 private:
