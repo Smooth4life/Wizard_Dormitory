@@ -24,6 +24,8 @@ ANPC::ANPC()
 		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 	}
 
+	DigitSounds.SetNum(10);
+
 }
 
 
@@ -242,8 +244,43 @@ void ANPC::PlayAffiliationDialogue()
 
 void ANPC::PlayStudentIDDialogue()
 {
-	const FString IDLine = FString::Printf(TEXT("제 학번은 %s 입니다"), *NPCDisplayID);
+	// 자막 출력
+	const FString IDLine = FString::Printf(TEXT("%s입니다"), *NPCDisplayID);
 	ShowSubtitle(FText::FromString(IDLine));
+
+	// 2) 숫자별 사운드 순차 재생
+	UWorld* World = GetWorld();
+
+	float AccumulatedDelay = 0.0f;
+	for (int32 i = 0; i < NPCDisplayID.Len(); ++i)
+	{
+		TCHAR C = NPCDisplayID[i];
+		if (C < '0' || C > '9') continue;
+
+		int32 Digit = C - '0';
+		if (!DigitSounds.IsValidIndex(Digit) || !DigitSounds[Digit]) continue;
+
+		FTimerHandle Handle;
+		FTimerDelegate PlayDigit = FTimerDelegate::CreateLambda([this, Digit]()
+			{
+				UGameplayStatics::PlaySound2D(this, DigitSounds[Digit]);
+			});
+
+		World->GetTimerManager().SetTimer(Handle, PlayDigit, AccumulatedDelay, false);
+
+		AccumulatedDelay += DigitSounds[Digit]->GetDuration();
+	}
+
+	// 3) 끝맺음 “입니다” 사운드 재생
+	if (IDEndingSound)
+	{
+		FTimerHandle EndHandle;
+		FTimerDelegate PlayEnd = FTimerDelegate::CreateLambda([this]()
+			{
+				UGameplayStatics::PlaySound2D(this, IDEndingSound);
+			});
+		World->GetTimerManager().SetTimer(EndHandle, PlayEnd, AccumulatedDelay, false);
+	}
 }
 
 
