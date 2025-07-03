@@ -255,7 +255,7 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 	if ((NumFake + NumRejected) > NumNPCToGenerate * 0.5f)
 	{
 		UGameplayStatics::OpenLevel(this, FName("M_GameOver"));
-
+		return;
 	}
 
 	if (NumNPCToGenerate == CurrentSeedIndex)
