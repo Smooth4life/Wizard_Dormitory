@@ -236,11 +236,6 @@ void ANPC::PlayNameDialogue(UDataTable* NameLineTable)
 	ShowSubtitle(Row->Subtitle);
 }
 
-void ANPC::PlayAffiliationDialogue()
-{
-	const FString AffiliationLine = FString::Printf(TEXT("%s 소속입니다"), *NPCDisplayAffiliation);
-	ShowSubtitle(FText::FromString(AffiliationLine));
-}
 
 void ANPC::PlayStudentIDDialogue()
 {

@@ -116,9 +116,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Subtitle")
 	void PlayNameDialogue(UDataTable* NameLineTable);
 
-	// 소속 말하기
-	UFUNCTION(BlueprintCallable, Category = "Subtitle")
-	void PlayAffiliationDialogue();
 
 	// 학번 말하기
 	UFUNCTION(BlueprintCallable, Category = "Subtitle")
