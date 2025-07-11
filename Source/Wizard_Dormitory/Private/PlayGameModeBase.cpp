@@ -120,6 +120,8 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 
 	Seed.bIsNormal = FMath::RandBool();
 
+	Seed.PenaltyScore = FMath::RandRange(0, 100);
+
 	return Seed;
 }
 

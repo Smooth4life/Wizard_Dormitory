@@ -42,6 +42,10 @@ struct FNPCSeedData
     int64 StudentID;
 
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 PenaltyScore = 0; //벌점
+
+
     // 미래 확장 대비 (예: 피부색, 안경, 모자 등)
     // UPROPERTY(EditAnywhere, BlueprintReadWrite)
     // int32 SkinColorIndex = 0;
