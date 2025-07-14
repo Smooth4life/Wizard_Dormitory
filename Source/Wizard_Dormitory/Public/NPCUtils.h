@@ -66,7 +66,9 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
     {
         Result.AffiliationName = TEXT("미지정");
     }
-   
+
+    // 소속 인덱스 전달
+    Result.AffiliationIndex = Seed.AffiliationEffectIndex;
 
     return Result;
 }
