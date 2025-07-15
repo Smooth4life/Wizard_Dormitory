@@ -34,10 +34,10 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
-	//0번 슬롯(피부) 머터리얼 인스턴스 (향후 피부색/질감 추가되면 사용)
-	UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
-	FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
-	GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
+	////0번 슬롯(피부) 머터리얼 인스턴스 (향후 피부색/질감 추가되면 사용)
+	//UMaterialInterface* BaseMaterial = GetMesh()->GetMaterial(0);
+	//FaceMaterialInstance = UMaterialInstanceDynamic::Create(BaseMaterial, this);
+	//GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
 
 	//눈 머터리얼
 	UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(1);
