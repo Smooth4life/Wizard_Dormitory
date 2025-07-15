@@ -104,6 +104,10 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "Event")
     void EndGame();
 
+    // 게임오버
+    UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+    void GameOver();
+
 
 
     // 테스트용 직접 스폰 (다수 생성용)

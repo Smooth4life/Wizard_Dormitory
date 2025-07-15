@@ -76,6 +76,7 @@ void APlayGameModeBase::GenerateNPCSeeds()
 
 
 }
+
 //테스트용
 void APlayGameModeBase::SpawnNPCWithSeed(const FNPCSeedData& Seed, const FVector& SpawnLocation)
 {
@@ -254,9 +255,9 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 		UE_LOG(LogTemp, Warning, TEXT("정상 NPC를 불통과시켰습니다! (오답)"));
 	}
 
-	if ((NumFake + NumRejected) > NumNPCToGenerate * 0.5f)
+	if ((NumFake + NumRejected) >= NumNPCToGenerate * 0.5f)
 	{
-		UGameplayStatics::OpenLevel(this, FName("M_GameOver"));
+		GameOver();
 		return;
 	}
 
@@ -265,14 +266,6 @@ void APlayGameModeBase::EvaluateNPC(bool bAccepted)
 		bGameEnd = true;
 		EndGame();
 	}
-
-	/*
-	else if (!bAccepted && !bIsActuallyNormal)
-	{
-		++NumAccepted;
-		UE_LOG(LogTemp, Warning, TEXT("비정상 NPC를 불통과시켰습니다. (정답)"));
-	}
-	*/
 
 	/*
 	// 게스트 NPC에 애니메이션 전달
