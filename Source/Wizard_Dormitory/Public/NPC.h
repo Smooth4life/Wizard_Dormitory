@@ -55,6 +55,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Affiliation")
 	void HideAffiliationEffect();
 
+	// Affiliation 인덱스 추가
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Affiliation")
+	int32 NPCAffiliationIndex;
+
 	UFUNCTION(BlueprintCallable, Category = "NameIdentify")
 	void NameIdentify();
 

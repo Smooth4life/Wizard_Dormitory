@@ -32,9 +32,11 @@ struct FNPCVisualData
     //헤어메쉬
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UStaticMesh* HairMesh;
+
     //얼굴좌표값
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FNPCFaceData FaceData;
+
     //소속나이아가라
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UNiagaraSystem* AffiliationEffect = nullptr;
@@ -50,6 +52,10 @@ struct FNPCVisualData
     //소속 이름
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AffiliationName;
+
+    // 소속 인덱스
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    int32 AffiliationIndex;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundBase* NameIdentify;

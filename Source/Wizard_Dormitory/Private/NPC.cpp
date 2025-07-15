@@ -100,6 +100,9 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 	NPCDisplayAffiliation = VisualData.AffiliationName;
 	NPCNameIndex = VisualData.NameIndex;
 
+	// Affiliation 인덱스 설정
+	NPCAffiliationIndex = VisualData.AffiliationIndex;
+
 }
 
 void ANPC::NotifyExitComplete()
