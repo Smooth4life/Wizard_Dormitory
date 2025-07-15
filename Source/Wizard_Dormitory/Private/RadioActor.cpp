@@ -97,7 +97,6 @@ void ARadioActor::UpdateVolume()
         FVector2D(2.0f, 0.0f),
         NewDialPitch
     );
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%f"), NewVolume));
     // 8) SoundMix Àû¿ë
     UGameplayStatics::SetSoundMixClassOverride(
         this,
