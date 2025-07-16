@@ -16,7 +16,7 @@ ANPC::ANPC()
 	PrimaryActorTick.bCanEverTick = true;
 	//메시로드
 	ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		MeshAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'"));
+		MeshAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/NPC/Mesh/SK_CharacterNPC.SK_CharacterNPC'"));
 	if (MeshAsset.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
@@ -40,9 +40,9 @@ void ANPC::BeginPlay()
 	//GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
 
 	//눈 머터리얼
-	UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(1);
+	UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(5);
 	EyeMaterialInstance = UMaterialInstanceDynamic::Create(EyeBaseMat, this);
-	GetMesh()->SetMaterial(1, EyeMaterialInstance);
+	GetMesh()->SetMaterial(5, EyeMaterialInstance);
 
 	//입 머터리얼 나중에 메쉬에 추가되면 주석 없애기만 하면됨
 	/*UMaterialInterface* MouthBaseMat = GetMesh()->GetMaterial(2);
