@@ -54,7 +54,7 @@ void APlayGameModeBase::GenerateNPCSeeds()
 			{
 				return NewSeed.HairIndex == Existing.HairIndex &&
 					NewSeed.EyeIndex == Existing.EyeIndex &&
-					NewSeed.MouthIndex == Existing.MouthIndex &&
+					//NewSeed.MouthIndex == Existing.MouthIndex &&
 					NewSeed.bIsNormal == Existing.bIsNormal;
 			});
 
@@ -102,8 +102,8 @@ FNPCSeedData APlayGameModeBase::GenerateRandomSeed() const
 	if (NPCLibrary.EyeUVs.Num() > 0)
 		Seed.EyeIndex = FMath::RandRange(0, NPCLibrary.EyeUVs.Num() - 1);
 
-	if (NPCLibrary.MouthUVs.Num() > 0)
-		Seed.MouthIndex = FMath::RandRange(0, NPCLibrary.MouthUVs.Num() - 1);
+	/*if (NPCLibrary.MouthUVs.Num() > 0)
+		Seed.MouthIndex = FMath::RandRange(0, NPCLibrary.MouthUVs.Num() - 1);*/
 
 	if (NPCLibrary.AffiliationEffects.Num() > 0)
 		Seed.AffiliationEffectIndex = FMath::RandRange(0, NPCLibrary.AffiliationEffects.Num() - 1);
@@ -160,7 +160,7 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 			});
 	}
 
-	if (NPCLibrary.MouthUVs.Num() > 1)
+	/*if (NPCLibrary.MouthUVs.Num() > 1)
 	{
 		Modifiers.Add([&]() {
 			do {
@@ -168,7 +168,7 @@ FNPCSeedData APlayGameModeBase::GenerateGuestSeedFromOriginal(const FNPCSeedData
 			} while (Modified.MouthIndex == Original.MouthIndex);
 			});
 
-	}
+	}*/
 	// 나이아가라 이펙트 인덱스 변경(소속)
 	if (NPCLibrary.AffiliationEffects.Num() > 1)
 	{
@@ -307,9 +307,9 @@ void APlayGameModeBase::AutoBindReusableNPC()
 void APlayGameModeBase::SetupUVPresets()
 {
 	NPCLibrary.EyeUVs = GenerateVerticalUVs(NumEyeFrames);
-	NPCLibrary.MouthUVs = GenerateVerticalUVs(NumMouthFrames);
+	//NPCLibrary.MouthUVs = GenerateVerticalUVs(NumMouthFrames);
 
-	UE_LOG(LogTemp, Warning, TEXT("EyeUVs = %d개, MouthUVs = %d개 자동 생성됨"), NumEyeFrames, NumMouthFrames);
+	UE_LOG(LogTemp, Warning, TEXT("EyeUVs = %d개, 자동 생성됨"), NumEyeFrames);
 }
 
 void APlayGameModeBase::StartGame()
@@ -374,20 +374,20 @@ void APlayGameModeBase::ApplyNextSeed()
 			? NameTable->FindRow<FNPCNameRow>(RowNames[GuestSeed.NameIndex], TEXT("LogGuest"))
 			: nullptr;
 
-		UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
+		UE_LOG(LogTemp, Warning, TEXT("[Original] H=%d E=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
 			OriginalSeed.HairIndex,
 			OriginalSeed.EyeIndex,
-			OriginalSeed.MouthIndex,
+			//OriginalSeed.MouthIndex,
 			OriginalSeed.AffiliationEffectIndex,
 			OriginalSeed.NameIndex,
 			OriginalNameRow ? *OriginalNameRow->Name : TEXT("NULL"),
 			OriginalSeed.StudentID,
 			OriginalSeed.bIsNormal ? TEXT("true") : TEXT("false"));
 
-		UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d M=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
+		UE_LOG(LogTemp, Warning, TEXT("[Guest]    H=%d E=%d A=%d | NameIndex=%d Name=%s | ID=%lld | IsNormal=%s"),
 			GuestSeed.HairIndex,
 			GuestSeed.EyeIndex,
-			GuestSeed.MouthIndex,
+			//GuestSeed.MouthIndex,
 			GuestSeed.AffiliationEffectIndex,
 			GuestSeed.NameIndex,
 			GuestNameRow ? *GuestNameRow->Name : TEXT("NULL"),

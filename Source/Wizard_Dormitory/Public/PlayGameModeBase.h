@@ -64,8 +64,8 @@ public:
     int32 NumEyeFrames = 4;
 
     //입 텍스쳐 갯수
-    UPROPERTY(EditAnywhere, Category = "NPC UV")
-    int32 NumMouthFrames = 4;
+    /*UPROPERTY(EditAnywhere, Category = "NPC UV")
+    int32 NumMouthFrames = 4;*/
 
 
     UPROPERTY(BlueprintReadWrite, Category = "NPC")

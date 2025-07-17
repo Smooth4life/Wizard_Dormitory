@@ -67,6 +67,7 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		HairComponent = NewObject<UStaticMeshComponent>(this, TEXT("HairComponent"));
 		HairComponent->SetStaticMesh(VisualData.HairMesh);
 		HairComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("headSocket"));
+		HairComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -150.0f));
 		HairComponent->RegisterComponent();
 	}
 
@@ -88,11 +89,11 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 
 	}
 
-	if (MouthMaterialInstance)
+	/*if (MouthMaterialInstance)
 	{
 		MouthMaterialInstance->SetVectorParameterValue("MouthUV",
 			FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
-	}
+	}*/
 
 	CurrentVisualData = VisualData;
 	NPCDisplayName = VisualData.DisplayName;

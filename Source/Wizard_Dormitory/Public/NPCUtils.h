@@ -27,10 +27,10 @@ static FNPCVisualData ConvertSeedToVisual(const FNPCSeedData & Seed, const FNPCL
     }
 
     // 입
-    if (Library.MouthUVs.IsValidIndex(Seed.MouthIndex))
+    /*if (Library.MouthUVs.IsValidIndex(Seed.MouthIndex))
     {
         Result.FaceData.MouthUV = Library.MouthUVs[Seed.MouthIndex];
-    }
+    }*/
     //나이아가라소속
     if (Library.AffiliationEffects.IsValidIndex(Seed.AffiliationEffectIndex))
     {

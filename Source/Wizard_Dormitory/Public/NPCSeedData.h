@@ -22,9 +22,9 @@ struct FNPCSeedData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EyeIndex = 0;
 
-    // 입 인덱스 (Sprite Sheet UV 목록 기준)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 MouthIndex = 0;
+    //// 입 인덱스 (Sprite Sheet UV 목록 기준)
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    //int32 MouthIndex = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsNormal;

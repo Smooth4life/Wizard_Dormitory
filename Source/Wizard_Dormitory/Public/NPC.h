@@ -96,8 +96,8 @@ public:
 	//눈, 입 머터리얼
 	UPROPERTY()
 	UMaterialInstanceDynamic* EyeMaterialInstance;
-	UPROPERTY()
-	UMaterialInstanceDynamic* MouthMaterialInstance;
+	/*UPROPERTY()
+	UMaterialInstanceDynamic* MouthMaterialInstance;*/
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 NPCNameIndex;

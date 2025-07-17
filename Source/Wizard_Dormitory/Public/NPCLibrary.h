@@ -18,8 +18,8 @@ struct FNPCLibrary
     UPROPERTY(Transient)
     TArray<FVector2D> EyeUVs;
 
-    UPROPERTY(Transient)
-    TArray<FVector2D> MouthUVs;
+    /*UPROPERTY(Transient)
+    TArray<FVector2D> MouthUVs;*/
 
     // 소속 이펙트들
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
