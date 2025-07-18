@@ -40,20 +40,27 @@ void ANPC::BeginPlay()
 	//GetMesh()->SetMaterial(FaceMaterialIndex, FaceMaterialInstance);
 
 	//눈 머터리얼
-	UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(5);
+	/*UMaterialInterface* EyeBaseMat = GetMesh()->GetMaterial(5);
 	EyeMaterialInstance = UMaterialInstanceDynamic::Create(EyeBaseMat, this);
-	GetMesh()->SetMaterial(5, EyeMaterialInstance);
+	GetMesh()->SetMaterial(5, EyeMaterialInstance);*/
 
 	//입 머터리얼 나중에 메쉬에 추가되면 주석 없애기만 하면됨
 	/*UMaterialInterface* MouthBaseMat = GetMesh()->GetMaterial(2);
 	MouthMaterialInstance = UMaterialInstanceDynamic::Create(MouthBaseMat, this);
 	GetMesh()->SetMaterial(2, MouthMaterialInstance);*/
 
-
 }
 
 void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 {
+	if (!EyeMaterialInstance)
+	{
+		UMaterialInterface* BaseMat = GetMesh()->GetMaterial(5);
+		EyeMaterialInstance = UMaterialInstanceDynamic::Create(BaseMat, this);
+		GetMesh()->SetMaterial(5, EyeMaterialInstance);
+		UE_LOG(LogTemp, Warning, TEXT("ApplyVisual() 안에서 동적 생성!"));
+	}
+
 	//headSocket 머리소켓 이름
 	//머리에 헤어 붙이기
 	if (VisualData.HairMesh)
@@ -70,7 +77,6 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		HairComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -150.0f));
 		HairComponent->RegisterComponent();
 	}
-
 	//머터리얼 UV파라미터 적용
 	//벡터파라미터의 이름을 맞추면 바뀜
 	//if (FaceMaterialInstance)
@@ -82,19 +88,21 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 	//}
 	if (EyeMaterialInstance)
 	{
+		
 		EyeMaterialInstance->SetVectorParameterValue("EyeUV",
 			FLinearColor(VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y, 0, 0));
 		//UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
 		//UE_LOG(LogTemp, Warning, TEXT("Slot 1 Material: %s"), *GetMesh()->GetMaterial(1)->GetName());
 
-	}
+		UE_LOG(LogTemp, Warning, TEXT("적용된 EyeUV = (%f, %f)"),
+			VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
 
+	}
 	/*if (MouthMaterialInstance)
 	{
 		MouthMaterialInstance->SetVectorParameterValue("MouthUV",
 			FLinearColor(VisualData.FaceData.MouthUV.X, VisualData.FaceData.MouthUV.Y, 0, 0));
 	}*/
-
 	CurrentVisualData = VisualData;
 	NPCDisplayName = VisualData.DisplayName;
 	NPCDisplayID = LexToString(VisualData.StudentID);
