@@ -62,6 +62,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NameIdentify")
 	void NameIdentify();
 
+	//눈깜박임 타이머
+	FTimerHandle BlinkTimerHandle;
+	bool bIsBlinking = false;
+
+	void ToggleEyeBlink();
+
 
 protected:
 	// Called when the game starts or when spawned

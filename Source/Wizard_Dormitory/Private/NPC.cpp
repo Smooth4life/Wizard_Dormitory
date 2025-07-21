@@ -30,6 +30,33 @@ ANPC::ANPC()
 
 
 
+void ANPC::ToggleEyeBlink()
+{
+	bIsBlinking = !bIsBlinking;
+
+
+	float NewBlinkValue = bIsBlinking ? 0.5f : 0.0f;
+	if (EyeMaterialInstance)
+	{
+		EyeMaterialInstance->SetScalarParameterValue("EyeBlink", NewBlinkValue);
+	}
+
+	// 감는 시간은 짧고, 뜨는 시간은 길게
+	float Delay = bIsBlinking ? 1.0f : FMath::FRandRange(2.5f, 5.0f);
+
+	GetWorldTimerManager().SetTimer(
+		BlinkTimerHandle, 
+		this, 
+		&ANPC::ToggleEyeBlink,
+		Delay,
+		false
+	);
+
+	UE_LOG(LogTemp, Log, TEXT("Blink: %s → EyeBlink = %f"),
+		bIsBlinking ? TEXT("감음") : TEXT("뜸"),
+		NewBlinkValue);
+}
+
 // Called when the game starts or when spawned
 void ANPC::BeginPlay()
 {
@@ -48,7 +75,6 @@ void ANPC::BeginPlay()
 	/*UMaterialInterface* MouthBaseMat = GetMesh()->GetMaterial(2);
 	MouthMaterialInstance = UMaterialInstanceDynamic::Create(MouthBaseMat, this);
 	GetMesh()->SetMaterial(2, MouthMaterialInstance);*/
-
 }
 
 void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
@@ -59,6 +85,7 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		EyeMaterialInstance = UMaterialInstanceDynamic::Create(BaseMat, this);
 		GetMesh()->SetMaterial(5, EyeMaterialInstance);
 		UE_LOG(LogTemp, Warning, TEXT("ApplyVisual() 안에서 동적 생성!"));
+		ToggleEyeBlink();
 	}
 
 	//headSocket 머리소켓 이름
