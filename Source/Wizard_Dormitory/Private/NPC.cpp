@@ -42,7 +42,9 @@ void ANPC::ToggleEyeBlink()
 	}
 
 	// 감는 시간은 짧고, 뜨는 시간은 길게
-	float Delay = bIsBlinking ? 1.0f : FMath::FRandRange(2.5f, 5.0f);
+	float Delay = bIsBlinking 
+		? FMath::FRandRange(0.15f, 0.25f)
+		: FMath::FRandRange(3.0f, 5.0f);
 
 	GetWorldTimerManager().SetTimer(
 		BlinkTimerHandle, 
@@ -51,10 +53,11 @@ void ANPC::ToggleEyeBlink()
 		Delay,
 		false
 	);
-
+	//테스트로그
+	/*
 	UE_LOG(LogTemp, Log, TEXT("Blink: %s → EyeBlink = %f"),
 		bIsBlinking ? TEXT("감음") : TEXT("뜸"),
-		NewBlinkValue);
+		NewBlinkValue);*/
 }
 
 // Called when the game starts or when spawned
@@ -84,7 +87,7 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		UMaterialInterface* BaseMat = GetMesh()->GetMaterial(5);
 		EyeMaterialInstance = UMaterialInstanceDynamic::Create(BaseMat, this);
 		GetMesh()->SetMaterial(5, EyeMaterialInstance);
-		UE_LOG(LogTemp, Warning, TEXT("ApplyVisual() 안에서 동적 생성!"));
+		//UE_LOG(LogTemp, Warning, TEXT("ApplyVisual() 안에서 동적 생성!"));
 		ToggleEyeBlink();
 	}
 
@@ -121,8 +124,8 @@ void ANPC::ApplyVisual(const FNPCVisualData& VisualData)
 		//UE_LOG(LogTemp, Warning, TEXT("Setting EyeUV: X=%f, Y=%f"), VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
 		//UE_LOG(LogTemp, Warning, TEXT("Slot 1 Material: %s"), *GetMesh()->GetMaterial(1)->GetName());
 
-		UE_LOG(LogTemp, Warning, TEXT("적용된 EyeUV = (%f, %f)"),
-			VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);
+		/*UE_LOG(LogTemp, Warning, TEXT("적용된 EyeUV = (%f, %f)"),
+			VisualData.FaceData.EyeUV.X, VisualData.FaceData.EyeUV.Y);*/
 
 	}
 	/*if (MouthMaterialInstance)
